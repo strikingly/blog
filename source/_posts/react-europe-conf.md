@@ -1,5 +1,6 @@
 title: ReactEurope Conf 参会感想
 date: 2015-07-14 22:06:43
+author: dfguo
 tags:
 - react
 - react europe conf 2015

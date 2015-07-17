@@ -16,6 +16,7 @@ url: http://strikingly.github.io/blog
 root: /blog/
 permalink: :year/:month/:day/:title/
 permalink_defaults:
+homepage_url: https://www.strikingly.com/?utm_source=tech_blog
 
 # Directory
 source_dir: source
@@ -71,3 +72,7 @@ deploy:
   type: git
   repository: https://github.com/strikingly/blog.git
   branch: gh-pages
+
+# Analytics
+google_analytics: UA-25124444-9
+disqus_shortname: strikinglytech

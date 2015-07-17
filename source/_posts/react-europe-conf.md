@@ -1,6 +1,10 @@
 title: ReactEurope Conf 参会感想
 date: 2015-07-14 22:06:43
-tags: react, react europe conf 2015, graphql, relay
+tags:
+- react
+- react europe conf 2015
+- graphql
+- relay
 categories:
 - Frontend
 - 中文

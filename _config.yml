@@ -68,4 +68,6 @@ theme: next
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: git
+  repository: https://github.com/strikingly/blog.git
+  branch: gh-pages

@@ -1,4 +1,4 @@
-[Strikingly](https://www.strikingly.com) tech blog powered by Hexo. Thoughts and learnings from buliding Strikingly.com. Please visit: [http://strikingly.github.io](http://strikingly.github.io)
+[Strikingly](https://www.strikingly.com) tech blog powered by Hexo. Thoughts and learnings from buliding Strikingly.com. Please visit: [http://strikingly.github.io/blog](http://strikingly.github.io/blog)
 
 Supported categories:
 

@@ -1,9 +1,9 @@
-[Strikingly](https://www.strikingly.com) tech blog powered by Hexo. Thoughts and learnings from buliding Strikingly.com. Please visit: [http://tech.strikingly.com](http://tech.strikingly.com)
+[Strikingly](https://www.strikingly.com) tech blog powered by Hexo. Thoughts and learnings from buliding Strikingly.com. Please visit: [http://strikingly.github.io](http://strikingly.github.io)
 
 Supported categories:
 
-* FE
-* BE
+* Frontend
+* Backend
 * iOS
 * DevOps
 * Design

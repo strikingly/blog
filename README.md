@@ -50,3 +50,6 @@ Sometimes you are not sure if people will be interested in a topic you have in m
 bounce ideas with the team. There are also topics in issues list that people want to learn more about but nobody claimed it yet.
 
 If you ran out of idea, find an English tech article that you really like and translate it to Chinese.
+
+
+**Every dev who passed probation will be writing a blog post every two months, people who failed to do so will buy a round of :beers: or :pizza: for all devs**

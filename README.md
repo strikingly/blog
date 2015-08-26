@@ -21,6 +21,11 @@ Supported categories:
 * Install hexo to your local machine
 
   ```npm install -g hexo-cli```
+
+* Install the 'next' theme for hexo
+
+  ```git clone git@github.com:iissnan/hexo-theme-next.git themes/next/```
+
 * Start server
 
 	```hexo server```

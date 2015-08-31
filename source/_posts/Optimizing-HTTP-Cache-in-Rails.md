@@ -12,7 +12,7 @@ categories:
 
 This is the first blog post of a series I'd like to write about caching and how caching improves the performance of Strikingly.
 
-# Introduction to HTTP Cache
+## Introduction to HTTP Cache
 
 The basic idea of caching is based on the principle of locality, a phenomenon where the same data is accessed frequently within a relatively short time, which means we can store this data in media with higher access speed to significantly boost system performance.
 
@@ -20,13 +20,13 @@ Caching is one of the most important concepts in the evolution of computer/netwo
 
 The browser cache is just one typical type of HTTP cache (or web cache). An HTTP cache temporarily stores web documents/data in order to reduce bandwidth usage, lag, and server load. Besides the browser cache, some routers, proxies, and network gateways have built-in caching mechanisms as well.
 
-# Getting Started
+## Getting Started
 
 HTTP cache behavior is well defined in the HTTP specification. It's rather boring to list out the specification without any context. Since we use Rails, let's start with [a sample Rails project](https://github.com/danielglh/http-cache-example).
 
 You can start the sample Rails server by running the following commands:
 
-```
+```sh
 git clone https://github.com/danielglh/http_cache_example.git
 cd http_cache_example
 gem install bundler
@@ -35,31 +35,31 @@ rake db:migrate db:seed
 rails s -p 8000
 ```
 
-Open [http://localhost:8000/](http://localhost:9000/) and you'll see a list of students.
+Open [http://localhost:8000/](http://localhost:8000/) and you'll see a list of students.
 
-# Cache Control
+## Cache Control
 
 Now open your browser's developer tools to the “Network” tab, refresh the page, and inspect the corresponding response of the “students” document. We should see the following two response headers.
 
-```
+```text
 Cache-Control: max-age=0, private, must-revalidate
 ```
 
 The values of Cache-Control here are the default cache control settings provided by Rails.
 
-```
+```text
 Cache-Control: max-age=<s>
 ```
 
 Here, `max-age` is the number of seconds after the cache receives a document for which the document is still considered fresh. If `max-age` is 0, it means the cache will still keep a cached copy of the document, but it **immediately** becomes stale.
 
-```
+```text
 Cache-Control: private|public
 ```
 
 If the origin server attaches the `private` header, it means the document is intended for a single user and **must not** be cached by any shared cache, while if `public` is attached, the shared cache **may** choose to cache the document (it can still choose to not cache the document).
 
-```
+```text
 Cache-Control: must-revalidate
 ```
 
@@ -67,7 +67,7 @@ If the origin server attaches `must-revalidate` header, the cache **must not** s
 
 As we can see, the default Rails settings provide the best practice for us to start with if we are not familiar with cache controlling. However, with the default settings, the server is not getting any benefit from HTTP cache at all. Try visiting http://localhost:8000/students repeatedly (opening new tabs with the same URL). You'll find that the server needs to fetch the data and render the view every time the browser issues a request:
 
-```
+```text
 Started GET "/students" for 127.0.0.1 at 2015-08-27 22:00:15 +0800
 Processing by StudentsController#index as HTML
   Student Load (0.2ms)  SELECT "students".* FROM "students"  ORDER BY "students"."updated_at" DESC
@@ -108,7 +108,7 @@ Notice I chose to set the cache control to public. I imagine this system would b
 
 Like I said, most browsers’ cache will revalidate stale documents with the origin server even if there’s no `must_revalidate` attached. However it’s still a good practice to explicitly attach it to make sure **all** HTTP caches follow the revalidation rule and avoid serving stale content.
 
-# Revalidation
+## Revalidation
 
 This begs the question: What exactly is revalidation? To understand what it is and how it works, we need to shorten the max-age time first by commenting code snippet 1 and uncommenting code snippet 2:
 
@@ -123,7 +123,7 @@ expires_in 10.seconds, public: true, must_revalidate: true
 
 Now we can make repeated requests for 10 seconds and it won’t hit the server. After 10 seconds, it will hit the server again and get a usual 200 response, then it’s cached for another 10 seconds, and so on. In this case, revalidation is simply fetching another fresh copy from origin server.
 
-```
+```text
 Started GET "/students" for 127.0.0.1 at 2015-08-27 22:10:39 +0800
 Processing by StudentsController#index as HTML
   Student Load (0.5ms)  SELECT "students".* FROM "students"  ORDER BY "students"."updated_at" DESC
@@ -154,7 +154,7 @@ fresh_when(etag: @students, last_modified: @students.first.updated_at)
 
 Again, we can repeat the request for 10 seconds and it won’t hit the server at all. After 10 seconds, it will hit the server and get a 304 response:
 
-```
+```text
 Started GET "/students" for 127.0.0.1 at 2015-08-27 22:15:41 +0800
 Processing by StudentsController#index as HTML
   Student Load (0.2ms)  SELECT  "students".* FROM "students"  ORDER BY "students"."updated_at" DESC LIMIT 1
@@ -178,32 +178,32 @@ So conditional GET seems to be pretty useful, but how does it work exactly? Let�
 
 The first response with `200 OK` status code comes with the following headers:
 
-```
+```text
 Cache-Control: max-age=10, public, must-revalidate
 Etag: "6eae1c9b5780f3ae4abf8212cc5a566a"
 Last-Modified: Thu, 27 Aug 2015 13:43:32 GMT
 ```
 
-The second response, however, has something special:
+The second request, however, has something special:
 
-```
+```text
 If-Modified-Since: Thu, 27 Aug 2015 13:43:32 GMT
 If-None-Match: "6eae1c9b5780f3ae4abf8212cc5a566a"
 ```
 
 By matching the headers of the first response and the second request, we can already have a rough guess on the revalidation mechanism. Our origin server sets something called `Etag` and `Last-Modified` in the response. The browser cache saves them with the cached copy and uses them to revalidate in subsequent requests.
 
-## Etag & IF-None-MATCH
+### Etag & IF-None-Match
 
 `The Etag`, or *entity tag*, is the version identifier of the resource. We can use **any** version management algorithm on the server side to generate etags, as long as different Etags can identify different resource content during a relatively long period of time. Rails by default calculates a message digest from the resource data. When the Etag is sent in subsequent requests in `If-None-Match` header, the origin server will calculate the Etag of the resource again and compare the two. If they don’t match, that means the cached copy is stale.
 
-## LAST-MODIFIED & IF-MODIFIED-SINCE
+### Last-Modified & If-Modified-Since
 
 `Last-Modified` is just the last modified timestamp of the resource. When the subsequent requests send it via `If-Modified-Since` header, the origin server fetches the last modified timestamp of the resource again and compares the two. If the resource has been modified after the timestamp in the request, the cached copy is considered stale.
 
 Although these two methods of revalidation seem to both work fine, it’s highly recommended for the origin server to provide both — if and only if both of them consider the cached copy fresh, the cache is then allowed to serve the cached version. Why? Because both of them have some shortfalls. For `Last-Modified` header, its time precision is not high enough to handle very frequently changed resources (changed on the order of milliseconds). For `Etag`, since it’s generally not realistic to manage a version control system on server side for all resources, message digest algorithms (like MD5) are often used instead and they are prior to collision. Using both makes it almost impossible for the origin server to consider a stale copy as fresh.
 
-# Best Practice in Rails
+## Best Practice in Rails
 
 To make sure that revalidation works properly, here is something that has to be taken care of on Rails side.
 
@@ -212,7 +212,7 @@ First of all, if the resource is passed directly as the value of the `etag` key 
 Besides that, the last modified timestamp is usually the `updated_at` property of the resource (or the maximum among all resources in a collection if the collection is requested). It gives us two hints:
 
 * for all models that we wish to cache, make sure the `timestamps` macro is used in the migration
-* if you update any properties of the model that are use visible and should be involved in the revalidation, make sure you use `update_attributes` , `save` or `save!` instead of `update_attribute`, even if only one property is updated, because `update_attribute` doesn’t changed `updated_at`
+* if you update any properties of the model that are use visible and should be involved in the revalidation, make sure you use `update_attributes` , `save` or `save!` instead of `update_attribute`, even if only one property is updated, because `update_attribute` doesn’t change `updated_at`
 
 There are other methods provided by Rails for cache control:
 
@@ -239,7 +239,7 @@ Last of all, to completely forbid the cache from caching resources, a `Cache-Con
 headers['Cache-Control'] = 'no-store'
 ```
 
-# Summary
+## Summary
 
 From the above results, we can see that:
 
@@ -254,13 +254,12 @@ However, HTTP cache still has the following limitations:
 
 In the next post of this series I will talk about our practice of server-side caching in Strikingly.
 
-# References
+## References
 
-1. Rails Conditional Get API document: http://api.rubyonrails.org/classes/ActionController/ConditionalGet.html
-2. RFC 2616 (HTTP/1.1), section 14: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+1. [Rails Conditional Get API](http://api.rubyonrails.org/classes/ActionController/ConditionalGet.html)
+2. [RFC 2616 (HTTP/1.1), section 14](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html)
 
-
-> Thanks to Dafeng Guo, Teng Bao and Florian Dutey, who helped review this article.
+> Thanks to Dafeng Guo, Teng Bao, Florian Dutey and Junchen Xia for reviewing drafts of this article.
 
 Daniel Gong
 

@@ -259,3 +259,8 @@ In the next post of this series I will talk about our practice of server-side ca
 1. Rails Conditional Get API document: http://api.rubyonrails.org/classes/ActionController/ConditionalGet.html
 2. RFC 2616 (HTTP/1.1), section 14: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
 
+> Thanks to Dafeng Guo, Teng Bao and Florian Dutey, who helped review this article.
+
+Daniel Gong
+
+Backend Engineer @ Strikingly.com

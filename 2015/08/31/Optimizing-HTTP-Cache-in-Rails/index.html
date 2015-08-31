@@ -1,0 +1,739 @@
+<!doctype html>
+<html class="theme-next use-motion theme-next-mist">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/blog/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+  <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+
+<link rel="stylesheet" type="text/css" href="/blog/css/main.css?v=0.4.4"/>
+
+
+
+
+  <meta name="keywords" content="http cache,rails," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
+
+
+<meta name="description" content="This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.
+Introduction to HTTP CacheThe basic idea of caching is based on the prin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Optimizing HTTP Cache in Rails">
+<meta property="og:url" content="http://strikingly.github.io/blog/2015/08/31/Optimizing-HTTP-Cache-in-Rails/index.html">
+<meta property="og:site_name" content="Strikingly Tech">
+<meta property="og:description" content="This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.
+Introduction to HTTP CacheThe basic idea of caching is based on the prin">
+<meta property="og:updated_time" content="2015-08-31T09:33:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Optimizing HTTP Cache in Rails">
+<meta name="twitter:description" content="This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.
+Introduction to HTTP CacheThe basic idea of caching is based on the prin">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: 'post'
+  };
+</script>
+
+  <title> Optimizing HTTP Cache in Rails | Strikingly Tech </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-25124444-9', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/blog/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">Strikingly Tech</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/blog" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="http://www.strikingly.com/s/careers/?utm_source=tech_blog" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-strikingly">
+          <a href="https://www.strikingly.com/?utm_source=tech_blog" rel="section">
+            <i class="menu-item-icon icon-next-strikingly"></i> <br />
+            Strikingly
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              Optimizing HTTP Cache in Rails
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2015-08-31T14:46:21+08:00" content="2015-08-31">
+            2015-08-31
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/blog/categories/Backend/" itemprop="url" rel="index">
+                  <span itemprop="name">Backend</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/blog/categories/Backend/English/" itemprop="url" rel="index">
+                  <span itemprop="name">English</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/blog/2015/08/31/Optimizing-HTTP-Cache-in-Rails/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/31/Optimizing-HTTP-Cache-in-Rails/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.</p>
+<h1 id="Introduction_to_HTTP_Cache">Introduction to HTTP Cache</h1><p>The basic idea of caching is based on the principle of locality, a phenomenon where the same data is accessed frequently within a relatively short time, which means we can store this data in media with higher access speed to significantly boost system performance.</p>
+<p>Caching is one of the most important concepts in the evolution of computer/network architecture. Your computer’s CPU can be faster than others’ because it has a larger cache; it becomes even faster with a larger RAM, which serves as the cache of your hard disk. A hybrid hard disk has faster read times than a traditional hard disk because it has a small chunk of SSD serving as disk cache. When you visit <a href="https://www.strikingly.com/" target="_blank" rel="external">Strikingly</a>, the IP address of our server is cached in numerous DNS servers around the world so you can quickly get the address from the nearest one. When you use Strikingly and navigate from one page to another, your browser properly caches certain page content so that it doesn’t end up requesting the same content again and again if it hasn’t changed at all.</p>
+<p>The browser cache is just one typical type of HTTP cache (or web cache). An HTTP cache temporarily stores web documents/data in order to reduce bandwidth usage, lag, and server load. Besides the browser cache, some routers, proxies, and network gateways have built-in caching mechanisms as well.</p>
+<h1 id="Getting_Started">Getting Started</h1><p>HTTP cache behavior is well defined in the HTTP specification. It’s rather boring to list out the specification without any context. Since we use Rails, let’s start with <a href="https://github.com/danielglh/http-cache-example" target="_blank" rel="external">a sample Rails project</a>.</p>
+<p>You can start the sample Rails server by running the following commands:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/danielglh/http_cache_example.git</span><br><span class="line"><span class="keyword">cd</span> http_cache_example</span><br><span class="line">gem install bundler</span><br><span class="line">bundle install</span><br><span class="line">rake <span class="keyword">d</span><span class="variable">b:migrate</span> <span class="keyword">d</span><span class="variable">b:seed</span></span><br><span class="line">rails <span class="keyword">s</span> -<span class="keyword">p</span> <span class="number">8000</span></span><br></pre></td></tr></table></figure>
+<p>Open <a href="http://localhost:9000/" target="_blank" rel="external">http://localhost:8000/</a> and you’ll see a list of students.</p>
+<h1 id="Cache_Control">Cache Control</h1><p>Now open your browser’s developer tools to the “Network” tab, refresh the page, and inspect the corresponding response of the “students” document. We should see the following two response headers.</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Cache</span><span class="attribute">-Control</span>: <span class="keyword">max</span><span class="attribute">-age</span><span class="subst">=</span><span class="number">0</span>, <span class="keyword">private</span>, must<span class="attribute">-revalidate</span></span><br></pre></td></tr></table></figure>
+<p>The values of Cache-Control here are the default cache control settings provided by Rails.</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cache-Control</span>: <span class="string">max-age=&lt;s&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Here, <code>max-age</code> is the number of seconds after the cache receives a document for which the document is still considered fresh. If <code>max-age</code> is 0, it means the cache will still keep a cached copy of the document, but it <strong>immediately</strong> becomes stale.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-<span class="string">Control:</span> <span class="keyword">private</span>|<span class="keyword">public</span></span><br></pre></td></tr></table></figure>
+<p>If the origin server attaches the <code>private</code> header, it means the document is intended for a single user and <strong>must not</strong> be cached by any shared cache, while if <code>public</code> is attached, the shared cache <strong>may</strong> choose to cache the document (it can still choose to not cache the document).</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cache-Control</span>: <span class="string">must-revalidate</span></span><br></pre></td></tr></table></figure>
+<p>If the origin server attaches <code>must-revalidate</code> header, the cache <strong>must not</strong> serve a stale cached copy without revalidating it with the origin server. If this header is not attached, the cache <strong>may</strong> choose to keep serving the stale cached copy. However, most browsers will revalidate with the origin server when the cached copy becomes stale.</p>
+<p>As we can see, the default Rails settings provide the best practice for us to start with if we are not familiar with cache controlling. However, with the default settings, the server is not getting any benefit from HTTP cache at all. Try visiting <a href="http://localhost:8000/students" target="_blank" rel="external">http://localhost:8000/students</a> repeatedly (opening new tabs with the same URL). You’ll find that the server needs to fetch the data and render the view every time the browser issues a request:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Started GET "/students" for 127.0.0.1 at 2015-08-27 22:00:15 +0800</span><br><span class="line">Processing by StudentsController#index as HTML</span><br><span class="line">  Student <span class="operator"><span class="keyword">Load</span> (<span class="number">0.2</span>ms)  <span class="keyword">SELECT</span> <span class="string">"students"</span>.* <span class="keyword">FROM</span> <span class="string">"students"</span>  <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">"students"</span>.<span class="string">"updated_at"</span> <span class="keyword">DESC</span></span><br><span class="line">  Rendered students/<span class="keyword">index</span>.html.erb within layouts/application (<span class="number">2.4</span>ms)</span><br><span class="line">Completed <span class="number">200</span> OK <span class="keyword">in</span> <span class="number">49</span>ms (Views: <span class="number">48.2</span>ms | ActiveRecord: <span class="number">0.2</span>ms)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Started <span class="keyword">GET</span> <span class="string">"/students"</span> <span class="keyword">for</span> <span class="number">127.0</span>.0.1 <span class="keyword">at</span> <span class="number">2015</span>-<span class="number">08</span>-<span class="number">27</span> <span class="number">22</span>:<span class="number">00</span>:<span class="number">17</span> +<span class="number">0800</span></span><br><span class="line">Processing <span class="keyword">by</span> StudentsController#<span class="keyword">index</span> <span class="keyword">as</span> HTML</span><br><span class="line">  Student <span class="keyword">Load</span> (<span class="number">0.3</span>ms)  <span class="keyword">SELECT</span> <span class="string">"students"</span>.* <span class="keyword">FROM</span> <span class="string">"students"</span>  <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">"students"</span>.<span class="string">"updated_at"</span> <span class="keyword">DESC</span></span><br><span class="line">  Rendered students/<span class="keyword">index</span>.html.erb within layouts/application (<span class="number">2.6</span>ms)</span><br><span class="line">Completed <span class="number">200</span> OK <span class="keyword">in</span> <span class="number">49</span>ms (Views: <span class="number">48.3</span>ms | ActiveRecord: <span class="number">0.3</span>ms)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Started <span class="keyword">GET</span> <span class="string">"/students"</span> <span class="keyword">for</span> <span class="number">127.0</span>.0.1 <span class="keyword">at</span> <span class="number">2015</span>-<span class="number">08</span>-<span class="number">27</span> <span class="number">22</span>:<span class="number">00</span>:<span class="number">18</span> +<span class="number">0800</span></span><br><span class="line">Processing <span class="keyword">by</span> StudentsController#<span class="keyword">index</span> <span class="keyword">as</span> HTML</span><br><span class="line">  Student <span class="keyword">Load</span> (<span class="number">0.5</span>ms)  <span class="keyword">SELECT</span> <span class="string">"students"</span>.* <span class="keyword">FROM</span> <span class="string">"students"</span>  <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">"students"</span>.<span class="string">"updated_at"</span> <span class="keyword">DESC</span></span><br><span class="line">  Rendered students/<span class="keyword">index</span>.html.erb within layouts/application (<span class="number">3.4</span>ms)</span><br><span class="line">Completed <span class="number">200</span> OK <span class="keyword">in</span> <span class="number">65</span>ms (Views: <span class="number">63.2</span>ms | ActiveRecord: <span class="number">0.5</span>ms)</span></span><br></pre></td></tr></table></figure>
+<p>Notice that the majority of request processing time is spent on view rendering.</p>
+<p>Now let’s make some changes to benefit from browser caching by uncommenting the following code in <code>students_controller.rb</code>.</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##################################################################</span></span><br><span class="line"><span class="comment"># Code Snippet 1</span></span><br><span class="line"><span class="comment"># Uncomment to change Cache-Control header to:</span></span><br><span class="line"><span class="comment"># Cache-Control: max-age=86400, public, must_revalidate</span></span><br><span class="line"><span class="comment">##################################################################</span></span><br><span class="line">expires_in <span class="number">1</span>.day, <span class="symbol">public:</span> <span class="keyword">true</span>, <span class="symbol">must_revalidate:</span> <span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<p>With this change, the origin server tells the cache that the document is fresh for one day’s time. Now if we visit the URL repeatedly, the request doesn’t hit the server at all — it’s served directly from the browser cache.</p>
+<p>Notice I chose to set the cache control to public. I imagine this system would be used in a school intranet, where it’s OK to make it public to a shared cache (if any).</p>
+<p>Like I said, most browsers’ cache will revalidate stale documents with the origin server even if there’s no <code>must_revalidate</code> attached. However it’s still a good practice to explicitly attach it to make sure <strong>all</strong> HTTP caches follow the revalidation rule and avoid serving stale content.</p>
+<h1 id="Revalidation">Revalidation</h1><p>This begs the question: What exactly is revalidation? To understand what it is and how it works, we need to shorten the max-age time first by commenting code snippet 1 and uncommenting code snippet 2:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##################################################################</span></span><br><span class="line"><span class="comment"># Code Snippet 2</span></span><br><span class="line"><span class="comment"># Uncomment to change Cache-Control header to:</span></span><br><span class="line"><span class="comment"># Cache-Control: max-age=10, public, must_revalidate</span></span><br><span class="line"><span class="comment">##################################################################</span></span><br><span class="line">expires_in <span class="number">10</span>.seconds, <span class="symbol">public:</span> <span class="keyword">true</span>, <span class="symbol">must_revalidate:</span> <span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<p>Now we can make repeated requests for 10 seconds and it won’t hit the server. After 10 seconds, it will hit the server again and get a usual 200 response, then it’s cached for another 10 seconds, and so on. In this case, revalidation is simply fetching another fresh copy from origin server.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Started GET "/students" for 127.0.0.1 at 2015-08-27 22:10:39 +0800</span><br><span class="line">Processing by StudentsController#index as HTML</span><br><span class="line">  Student <span class="operator"><span class="keyword">Load</span> (<span class="number">0.5</span>ms)  <span class="keyword">SELECT</span> <span class="string">"students"</span>.* <span class="keyword">FROM</span> <span class="string">"students"</span>  <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">"students"</span>.<span class="string">"updated_at"</span> <span class="keyword">DESC</span></span><br><span class="line">  Rendered students/<span class="keyword">index</span>.html.erb within layouts/application (<span class="number">2.1</span>ms)</span><br><span class="line">Completed <span class="number">200</span> OK <span class="keyword">in</span> <span class="number">59</span>ms (Views: <span class="number">58.2</span>ms | ActiveRecord: <span class="number">0.5</span>ms)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Started <span class="keyword">GET</span> <span class="string">"/students"</span> <span class="keyword">for</span> <span class="number">127.0</span>.0.1 <span class="keyword">at</span> <span class="number">2015</span>-<span class="number">08</span>-<span class="number">27</span> <span class="number">22</span>:<span class="number">10</span>:<span class="number">51</span> +<span class="number">0800</span></span><br><span class="line">Processing <span class="keyword">by</span> StudentsController#<span class="keyword">index</span> <span class="keyword">as</span> HTML</span><br><span class="line">  Student <span class="keyword">Load</span> (<span class="number">0.3</span>ms)  <span class="keyword">SELECT</span> <span class="string">"students"</span>.* <span class="keyword">FROM</span> <span class="string">"students"</span>  <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">"students"</span>.<span class="string">"updated_at"</span> <span class="keyword">DESC</span></span><br><span class="line">  Rendered students/<span class="keyword">index</span>.html.erb within layouts/application (<span class="number">3.5</span>ms)</span><br><span class="line">Completed <span class="number">200</span> OK <span class="keyword">in</span> <span class="number">49</span>ms (Views: <span class="number">48.3</span>ms | ActiveRecord: <span class="number">0.3</span>ms)</span></span><br></pre></td></tr></table></figure>
+<p>However, during the 10 seconds, we’re not changing any student data. It will be nice if the origin server can tell the browser cache this fact so the browser cache can just serve a cached copy to the user.</p>
+<p>Fortunately this can be done via conditional GET. A conditional GET request is a GET request that carries certain conditional headers. The origin server returns a fresh copy only if the conditions are true (which means the cached copy is stale), or returns a message to the cache if the cached copy is still fresh and can be served to the client.</p>
+<p>To enable conditional GET support on the server side, you can uncomment code snippet 5:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##################################################################</span></span><br><span class="line"><span class="comment"># Code Snippet 5</span></span><br><span class="line"><span class="comment"># Uncomment the following code to specify revalidation rule</span></span><br><span class="line"><span class="comment">##################################################################</span></span><br><span class="line">fresh_when(<span class="symbol">etag:</span> <span class="variable">@students</span>, <span class="symbol">last_modified:</span> <span class="variable">@students</span>.first.updated_at)</span><br></pre></td></tr></table></figure>
+<p>Again, we can repeat the request for 10 seconds and it won’t hit the server at all. After 10 seconds, it will hit the server and get a 304 response:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Started GET "/students" for 127.0.0.1 at 2015-08-27 22:15:41 +0800</span><br><span class="line">Processing by StudentsController#index as HTML</span><br><span class="line">  Student <span class="operator"><span class="keyword">Load</span> (<span class="number">0.2</span>ms)  <span class="keyword">SELECT</span>  <span class="string">"students"</span>.* <span class="keyword">FROM</span> <span class="string">"students"</span>  <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">"students"</span>.<span class="string">"updated_at"</span> <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">1</span></span><br><span class="line">  <span class="keyword">Cache</span> digest <span class="keyword">for</span> app/views/students/<span class="keyword">index</span>.html.erb: <span class="number">146e6</span>d9cd79eda46b0b42ba6c3ca01d4</span><br><span class="line">  Student <span class="keyword">Load</span> (<span class="number">0.2</span>ms)  <span class="keyword">SELECT</span> <span class="string">"students"</span>.* <span class="keyword">FROM</span> <span class="string">"students"</span>  <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">"students"</span>.<span class="string">"updated_at"</span> <span class="keyword">DESC</span></span><br><span class="line">  Rendered students/<span class="keyword">index</span>.html.erb within layouts/application (<span class="number">1.2</span>ms)</span><br><span class="line">Completed <span class="number">200</span> OK <span class="keyword">in</span> <span class="number">45</span>ms (Views: <span class="number">41.1</span>ms | ActiveRecord: <span class="number">0.4</span>ms)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Started <span class="keyword">GET</span> <span class="string">"/students"</span> <span class="keyword">for</span> <span class="number">127.0</span>.0.1 <span class="keyword">at</span> <span class="number">2015</span>-<span class="number">08</span>-<span class="number">27</span> <span class="number">22</span>:<span class="number">15</span>:<span class="number">54</span> +<span class="number">0800</span></span><br><span class="line">Processing <span class="keyword">by</span> StudentsController#<span class="keyword">index</span> <span class="keyword">as</span> HTML</span><br><span class="line">  Student <span class="keyword">Load</span> (<span class="number">0.6</span>ms)  <span class="keyword">SELECT</span>  <span class="string">"students"</span>.* <span class="keyword">FROM</span> <span class="string">"students"</span>  <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">"students"</span>.<span class="string">"updated_at"</span> <span class="keyword">DESC</span> <span class="keyword">LIMIT</span> <span class="number">1</span></span><br><span class="line">  <span class="keyword">Cache</span> digest <span class="keyword">for</span> app/views/students/<span class="keyword">index</span>.html.erb: <span class="number">146e6</span>d9cd79eda46b0b42ba6c3ca01d4</span><br><span class="line">  Student <span class="keyword">Load</span> (<span class="number">0.2</span>ms)  <span class="keyword">SELECT</span> <span class="string">"students"</span>.* <span class="keyword">FROM</span> <span class="string">"students"</span>  <span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">"students"</span>.<span class="string">"updated_at"</span> <span class="keyword">DESC</span></span><br><span class="line">Completed <span class="number">304</span> <span class="keyword">Not</span> Modified <span class="keyword">in</span> <span class="number">8</span>ms (ActiveRecord: <span class="number">0.8</span>ms)</span></span><br></pre></td></tr></table></figure>
+<p>The <code>304 Not Modified</code> message basically tells the cache that the cached copy is still fresh and we can just serve that. Notice that the request process time is significantly decreased (from 45ms to 8ms, decreased by 82%).</p>
+<p>So conditional GET seems to be pretty useful, but how does it work exactly? Let’s take a look at the requests and responses.</p>
+<p>The first response with <code>200 OK</code> status code comes with the following headers:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Cache-Control</span>: <span class="string">max-age=10, public, must-revalidate</span></span><br><span class="line"><span class="attribute">Etag</span>: <span class="string">"6eae1c9b5780f3ae4abf8212cc5a566a"</span></span><br><span class="line"><span class="attribute">Last-Modified</span>: <span class="string">Thu, 27 Aug 2015 13:43:32 GMT</span></span><br></pre></td></tr></table></figure>
+<p>The second response, however, has something special:</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">If-Modified-Since</span>: <span class="string">Thu, 27 Aug 2015 13:43:32 GMT</span></span><br><span class="line"><span class="attribute">If-None-Match</span>: <span class="string">"6eae1c9b5780f3ae4abf8212cc5a566a"</span></span><br></pre></td></tr></table></figure>
+<p>By matching the headers of the first response and the second request, we can already have a rough guess on the revalidation mechanism. Our origin server sets something called <code>Etag</code> and <code>Last-Modified</code> in the response. The browser cache saves them with the cached copy and uses them to revalidate in subsequent requests.</p>
+<h2 id="Etag_&amp;_IF-None-MATCH">Etag &amp; IF-None-MATCH</h2><p><code>The Etag</code>, or <em>entity tag</em>, is the version identifier of the resource. We can use <strong>any</strong> version management algorithm on the server side to generate etags, as long as different Etags can identify different resource content during a relatively long period of time. Rails by default calculates a message digest from the resource data. When the Etag is sent in subsequent requests in <code>If-None-Match</code> header, the origin server will calculate the Etag of the resource again and compare the two. If they don’t match, that means the cached copy is stale.</p>
+<h2 id="LAST-MODIFIED_&amp;_IF-MODIFIED-SINCE">LAST-MODIFIED &amp; IF-MODIFIED-SINCE</h2><p><code>Last-Modified</code> is just the last modified timestamp of the resource. When the subsequent requests send it via <code>If-Modified-Since</code> header, the origin server fetches the last modified timestamp of the resource again and compares the two. If the resource has been modified after the timestamp in the request, the cached copy is considered stale.</p>
+<p>Although these two methods of revalidation seem to both work fine, it’s highly recommended for the origin server to provide both — if and only if both of them consider the cached copy fresh, the cache is then allowed to serve the cached version. Why? Because both of them have some shortfalls. For <code>Last-Modified</code> header, its time precision is not high enough to handle very frequently changed resources (changed on the order of milliseconds). For <code>Etag</code>, since it’s generally not realistic to manage a version control system on server side for all resources, message digest algorithms (like MD5) are often used instead and they are prior to collision. Using both makes it almost impossible for the origin server to consider a stale copy as fresh.</p>
+<h1 id="Best_Practice_in_Rails">Best Practice in Rails</h1><p>To make sure that revalidation works properly, here is something that has to be taken care of on Rails side.</p>
+<p>First of all, if the resource is passed directly as the value of the <code>etag</code> key as we just did (<code>etag: @students</code> in Code Snippet 5), the <code>cache_key</code> method of the resource will be used to calculate the Etag. In this case, we should make sure that the <code>cache_key</code> method reflects the definition of fresh/stale resource in your business domain. Sometimes we may not want all properties of the resource go to into the calculation, because the more properties involved, the more strict caching control becomes. Since the client request is a representation of the resource (notice it’s never the resource itself), it’s not necessary to include some less important properties or user invisible properties.</p>
+<p>Besides that, the last modified timestamp is usually the <code>updated_at</code> property of the resource (or the maximum among all resources in a collection if the collection is requested). It gives us two hints:</p>
+<ul>
+<li>for all models that we wish to cache, make sure the <code>timestamps</code> macro is used in the migration</li>
+<li>if you update any properties of the model that are use visible and should be involved in the revalidation, make sure you use <code>update_attributes</code> , <code>save</code> or <code>save!</code> instead of <code>update_attribute</code>, even if only one property is updated, because <code>update_attribute</code> doesn’t changed <code>updated_at</code></li>
+</ul>
+<p>There are other methods provided by Rails for cache control:</p>
+<ul>
+<li><code>stale?</code>  - This method behaves almost the same as <code>fresh_when</code> . In fact, it calls <code>fresh_when</code> to handle the revalidation logic underneath. The only difference is that <code>stale?</code> allows us to customize the render behavior (for example rendering a different view, as shown in code snippet 6), while <code>fresh_when</code> only follows the default rendering behavior.</li>
+<li><code>expires_now</code> - This method simply attaches a <code>Cache-Control: no-cache</code> header to the response (as shown in code snippet 3). When a <code>no-cache</code> header is present, it shadows other Cache-Control headers, and it’s pretty much identical to <code>Cache-Control: max-age=0, must-revalidate</code>. Notice that it doesn’t mean the resource is not allowed be cached; it just means each request of the resource has to revalidate before the cached copy is served.</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##################################################################</span></span><br><span class="line"><span class="comment"># Code Snippet 3</span></span><br><span class="line"><span class="comment"># Uncomment to make the response stale immediately</span></span><br><span class="line"><span class="comment"># Cache-Control: no-cache</span></span><br><span class="line"><span class="comment">##################################################################</span></span><br><span class="line">expires_now</span><br></pre></td></tr></table></figure>
+<p>Last of all, to completely forbid the cache from caching resources, a <code>Cache-Control: no-store</code> header should be used. When this header is present, the cache <strong>must not</strong> keep any copy of the resource at all. There’s no method in Rails for this but you can manually attach it in the headers, as shown in code snippet 4.</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##################################################################</span></span><br><span class="line"><span class="comment"># Code Snippet 4</span></span><br><span class="line"><span class="comment"># Uncomment to stop generating cached copy at all</span></span><br><span class="line"><span class="comment"># Cache-Control: no-store</span></span><br><span class="line"><span class="comment">##################################################################</span></span><br><span class="line">headers[<span class="string">'Cache-Control'</span>] = <span class="string">'no-store'</span></span><br></pre></td></tr></table></figure>
+<h1 id="Summary">Summary</h1><p>From the above results, we can see that:</p>
+<ul>
+<li>Caching and revalidation can significantly reduce the server load and improve the user experience</li>
+<li>Rails’s default caching behavior works well, but it also gives us more fine-grained control of caching from server side</li>
+</ul>
+<p>However, HTTP cache still has the following limitations:</p>
+<ul>
+<li>The client can still decide to <strong>not accept</strong> the cached copy</li>
+<li>Some HTTP clients don’t have built-in cache and don’t work in a network with shared cache</li>
+<li>When revalidation results in a stale copy, the server side will have to load the data and do some complex processing if necessary to return a fresh copy</li>
+</ul>
+<p>In the next post of this series I will talk about our practice of server-side caching in Strikingly.</p>
+<h1 id="References">References</h1><ol>
+<li>Rails Conditional Get API document: <a href="http://api.rubyonrails.org/classes/ActionController/ConditionalGet.html" target="_blank" rel="external">http://api.rubyonrails.org/classes/ActionController/ConditionalGet.html</a></li>
+<li>RFC 2616 (HTTP/1.1), section 14: <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html" target="_blank" rel="external">http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html</a></li>
+</ol>
+<blockquote>
+<p>Thanks to Dafeng Guo, Teng Bao and Florian Dutey, who helped review this article.</p>
+</blockquote>
+<p>Daniel Gong</p>
+<p>Backend Engineer @ Strikingly.com</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/http-cache/" rel="tag">#http cache</a>
+          
+            <a href="/blog/tags/rails/" rel="tag">#rails</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2015/08/26/navigating-react-ecosystem/" rel="next">探索 React 生态圈</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <p class="site-author-name" itemprop="name">Strikingly</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/">
+              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">categories</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">tags</span>
+              
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/strikingly" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/strikingly" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/strikingly" target="_blank">facebook</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction_to_HTTP_Cache"><span class="nav-number">1.</span> <span class="nav-text">Introduction to HTTP Cache</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Getting_Started"><span class="nav-number">2.</span> <span class="nav-text">Getting Started</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cache_Control"><span class="nav-number">3.</span> <span class="nav-text">Cache Control</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Revalidation"><span class="nav-number">4.</span> <span class="nav-text">Revalidation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Etag_&_IF-None-MATCH"><span class="nav-number">4.1.</span> <span class="nav-text">Etag & IF-None-MATCH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LAST-MODIFIED_&_IF-MODIFIED-SINCE"><span class="nav-number">4.2.</span> <span class="nav-text">LAST-MODIFIED & IF-MODIFIED-SINCE</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Best_Practice_in_Rails"><span class="nav-number">5.</span> <span class="nav-text">Best Practice in Rails</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Summary"><span class="nav-number">6.</span> <span class="nav-text">Summary</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#References"><span class="nav-number">7.</span> <span class="nav-text">References</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2015</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Strikingly</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/blog/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'strikinglytech';
+      var disqus_identifier = '2015/08/31/Optimizing-HTTP-Cache-in-Rails/';
+      var disqus_title = 'Optimizing HTTP Cache in Rails';
+      var disqus_url = 'http://strikingly.github.io/blog/2015/08/31/Optimizing-HTTP-Cache-in-Rails/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+  
+  <script type="text/javascript" src="/blog/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/blog/js/fancy-box.js?v=0.4.4"></script>
+
+
+  <script type="text/javascript" src="/blog/js/helpers.js?v=0.4.4"></script>
+  
+
+  <script type="text/javascript" src="/blog/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/blog/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/blog/js/motion_global.js?v=0.4.4" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/blog/js/nav-toggle.js?v=0.4.4"></script>
+  <script type="text/javascript" src="/blog/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/blog/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/blog/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/blog/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

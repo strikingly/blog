@@ -9,6 +9,7 @@ Supported categories:
 * Design
 * UI/UX
 * English
+* Team
 * 中文
 
 ## Getting started

@@ -26,7 +26,12 @@
   <link href='//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 {% endif %}
 
+{# GOOGLE FONT CSS #}
 <link rel="stylesheet" type="text/css" href="{{ url_for(theme.css) }}/main.css?v={{ theme.version }}"/>
+<!-- 
+  <link href='http://fonts.useso.com/css?family=Source+Sans+Pro:400,400italic,700,700italic|Open+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
+-->
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700,700italic|Open+Sans:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
 
 {% if config.description %}
     <meta name="description" content="{{ config.description }}" />

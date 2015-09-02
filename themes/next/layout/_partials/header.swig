@@ -4,7 +4,10 @@
       <span class="logo">
         <i class="icon-next-logo"></i>
       </span>
-      <span class="site-title">{{ config.title }}</span>
+      <span class="site-title">
+        <img class="svg-logo" src="/blog/images/strikingly-logo.svg">
+        <span class="site-title-text"> {{ config.title }} </span>
+      </span>
   </a>
   <span class="logo-line-after"><i></i></span>
 </h1>

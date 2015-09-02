@@ -1,3 +1,117 @@
 // Custom styles.
 
-.header { background: white; }
+$purple = #6D568F
+$blue = #29AAD8
+$gold = #fc0
+
+body
+  letter-spacing -0.5px
+
+a
+  &:hover
+    color $blue
+    border-color $blue
+
+.posts-expand .post-meta
+  letter-spacing 0
+
+// NAV
+.menu 
+  padding 0
+  margin-top 0
+  .menu-item a
+    border-radius 3px
+    font-size 14px
+    font-weight bold
+    transition none
+    &:hover
+      background $purple
+      color white
+
+
+// HEADER/FOOTER
+.header, .footer
+  background white
+
+.header-inner
+  margin-bottom 40px
+
+.header-inner, .main-inner
+  max-width 90%
+.main-inner .content
+  max-width 100%
+  
+.svg-logo
+  width 125px
+
+.footer
+  padding 50px 0
+
+.theme-info, .powered-by::after
+  display none
+
+// POSTS
+.posts-expand 
+  .post-title
+    font-size 36px
+  .post-title-link
+    font-family "open sans", sans-serif
+    &:before {display: none !important;}
+    &:hover {color: $blue}
+
+.site-meta
+  margin-left 0
+  .site-title
+    img 
+      display inline
+      position relative
+      top 3px
+      vertical-align top
+    .site-title-text
+      color $purple
+      text-transform uppercase
+      opacity 0.8
+      font-weight 400
+      padding-left 5px
+
+// CODE
+.post pre, .post .highlight 
+  letter-spacing 0
+  font-size 14px
+
+// MEDIA
+@media (max-width: 767px)
+  body
+    font-size 15px
+  .posts-expand .post-title
+    font-size 32px
+
+
+// SIDEBAR
+.sidebar
+  box-shadow none
+  background #25282b
+
+  .sidebar-inner
+    text-align left
+    padding 25px 30px
+
+.page-post-detail .sidebar-nav-toc
+  padding 0
+.sidebar .post-toc ol
+  padding-left 0
+
+.sidebar-toggle, .back-to-top
+  background $purple
+  padding 16px
+  border-radius 100px
+
+.back-to-top
+  bottom 45px
+
+.sidebar-toggle
+  bottom 100px
+
+.links-of-author a 
+  &:before
+    background: $gold

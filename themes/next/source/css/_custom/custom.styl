@@ -18,16 +18,30 @@ a
 // NAV
 .menu 
   padding 0
-  margin-top 0
+  margin-top 6px
   .menu-item a
     border-radius 3px
     font-size 14px
     font-weight bold
-    transition none
+    transition background 0.15s ease-out
     &:hover
       background $purple
       color white
 
+.site-meta
+  margin-left 0
+  .site-title
+    img 
+      display inline
+      position relative
+      top 3px
+      vertical-align top
+    .site-title-text
+      color $purple
+      text-transform uppercase
+      opacity 0.8
+      font-weight 400
+      padding-left 5px
 
 // HEADER/FOOTER
 .header, .footer
@@ -54,21 +68,6 @@ a
     &:before {display: none !important;}
     &:hover {color: $blue}
 
-.site-meta
-  margin-left 0
-  .site-title
-    img 
-      display inline
-      position relative
-      top 3px
-      vertical-align top
-    .site-title-text
-      color $purple
-      text-transform uppercase
-      opacity 0.8
-      font-weight 400
-      padding-left 5px
-
 // CODE
 .post pre, .post .highlight 
   letter-spacing 0
@@ -87,6 +86,17 @@ a
   .posts-expand .post-title
     font-size 32px
 
+@media (min-width: 1200px)
+  .site-meta
+    margin-left -90px
+  .menu
+    margin-right -90px
+
+
+// ARTICLE LIST
+.posts-expand .post
+  border-bottom: 1px solid #abc;
+  padding-bottom 50px
 
 // SIDEBAR
 .sidebar

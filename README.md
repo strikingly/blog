@@ -23,10 +23,6 @@ Supported categories:
 
   ```npm install -g hexo-cli```
 
-* Install the 'next' theme for hexo
-
-  ```git clone git@github.com:strikingly/hexo-theme-next.git themes/next/```
-
 * Start server
 
 	```hexo server```
@@ -57,5 +53,10 @@ bounce ideas with the team. There are also topics in issues list that people wan
 
 If you ran out of idea, find an English tech article that you really like and translate it to Chinese.
 
+## Themes
+
+* Example of how to install a theme. You don't need to do this because the theme is already in this repo.
+
+  ```git clone git@github.com:strikingly/hexo-theme-next.git themes/next/```
 
 **Every dev who passed probation will be writing a blog post every two months, people who failed to do so will buy a round of :beers: or :pizza: for all devs**

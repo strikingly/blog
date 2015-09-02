@@ -36,11 +36,6 @@ a
 .header-inner
   margin-bottom 40px
 
-.header-inner, .main-inner
-  max-width 90%
-.main-inner .content
-  max-width 100%
-  
 .svg-logo
   width 125px
 
@@ -80,6 +75,12 @@ a
   font-size 14px
 
 // MEDIA
++tablet()
+  .one-column .header-inner, 
+  .one-column .main-inner, 
+  .one-column .main-inner .content
+    width 700px
+
 @media (max-width: 767px)
   body
     font-size 15px

@@ -47,7 +47,8 @@ It will generate a post md file and a folder for you to put static assets.
 
 ```hexo generate --deploy```
 
-This will generaete the static files from the local git repo and publish it to Github pages.
+This will generate the static files from the local git repo and publish it to Github pages.
+* If you changed theme files, make sure to run `hexo clean` before you deploy.
 
 
 ## Getting ideas

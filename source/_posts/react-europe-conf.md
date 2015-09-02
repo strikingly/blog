@@ -15,6 +15,8 @@ React 带来的革命性创新是前端世界过去几年最激动人心的变�
 
 Keynote [1] 讲师是来自 Facebook 的 Christopher Chedeau (vjeux)。他分享了 React 生态系统四大方面 （Data, Targets, Language, Packager）的变化。这次大会所有的内容我觉得也都是这四方面的延伸。我印象最深的是 Data 和 Targets，也是这篇文章主要想分享的内容。
 
+<!-- more -->
+
 # Data
 
 React 定义自己为 MVC 中的 View。这让前端开发者从 V 开始去思考 UI 设计。但现在针对数据操作和获取方式，社区里还没有一种公认的方法。这也是任何写 React 应用时最难处理的地方。

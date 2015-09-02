@@ -16,6 +16,8 @@ This is the first blog post of a series I'd like to write about caching and how 
 
 The basic idea of caching is based on the principle of locality, a phenomenon where the same data is accessed frequently within a relatively short time, which means we can store this data in media with higher access speed to significantly boost system performance.
 
+<!-- more -->
+
 Caching is one of the most important concepts in the evolution of computer/network architecture. Your computer's CPU can be faster than others' because it has a larger cache; it becomes even faster with a larger RAM, which serves as the cache of your hard disk. A hybrid hard disk has faster read times than a traditional hard disk because it has a small chunk of SSD serving as disk cache. When you visit [Strikingly](https://www.strikingly.com/), the IP address of our server is cached in numerous DNS servers around the world so you can quickly get the address from the nearest one. When you use Strikingly and navigate from one page to another, your browser properly caches certain page content so that it doesn't end up requesting the same content again and again if it hasn't changed at all.
 
 The browser cache is just one typical type of HTTP cache (or web cache). An HTTP cache temporarily stores web documents/data in order to reduce bandwidth usage, lag, and server load. Besides the browser cache, some routers, proxies, and network gateways have built-in caching mechanisms as well.

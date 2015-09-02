@@ -25,7 +25,7 @@ Supported categories:
 
 * Install the 'next' theme for hexo
 
-  ```git clone git@github.com:iissnan/hexo-theme-next.git themes/next/```
+  ```git clone git@github.com:strikingly/hexo-theme-next.git themes/next/```
 
 * Start server
 

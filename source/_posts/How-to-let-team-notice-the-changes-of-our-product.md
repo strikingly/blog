@@ -13,10 +13,12 @@ categories:
 对于一个人数30-50的创业团队来说，如何让每个成员及时了解产品的变化是一个有意思的话题。
 
 首先，这个所谓的“变化”，是指小变化，不是大的新功能：
+
 1. 用户看得见的变化：小的UI优化，Bug修复。
 2. 用户体验的变化：性能的优化（更加流畅），交互的变化（更加合理）。
 
 第一个问题，如何搜集变化：
+
 1. 成员可以每日写工作总结。
  1. 根据工作内容抽离出“变化”。
  2. 有个成员专门去维护一个或一系列文档。
@@ -52,7 +54,7 @@ end
 ``` 
 
 #### Step2: 约定PR模板
-1. 在PR的描述Markdown中可以（必须）有一个模板
+- 在PR的描述Markdown中可以（必须）有一个模板
   
 ![pr_template.png](http://upload-images.jianshu.io/upload_images/17174-db041acc9c2e8fab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -79,60 +81,62 @@ end
 #### Step4: 处理 github webhook
 
 1. 获取 PR 的 Number
-```ruby
-  # request_json 是 webhook request body
-  def api_params_from request_json
-     request_json['pull_request']['number']
-  end
-```
+  ```ruby
+    # request_json 是 webhook request body
+    def api_params_from request_json
+       request_json['pull_request']['number']
+    end
+  ```
 
 2. 因为我们并不能相信 webhook，所以我们应该基于 webhook 的信息主动通过 github API 获取数据。
-```ruby
-  # 访问 github API
-  github_response = Github.new.pull_requests.get(PROP_OWNER, PROP_NAME, pr_num)
-```
+  ```ruby
+    # 访问 github API
+    github_response = Github.new.pull_requests.get(PROP_OWNER, PROP_NAME, pr_num)
+  ```
+
 3. 筛选PR: merged 到 BASE_BRANCH 且含有 USER_FACING_LINE
-```ruby
-  USER_FACING_LINE = '- [x] **contains user facing changes'
-  def user_facing_changes_pr? response
-     response.merged &&
-     response.base.ref == BASE_BRANCH &&
-     response.body.body.include?(USER_FACING_LINE)
-  end
-```
+  ```ruby
+    USER_FACING_LINE = '- [x] **contains user facing changes'
+    def user_facing_changes_pr? response
+       response.merged &&
+       response.base.ref == BASE_BRANCH &&
+       response.body.body.include?(USER_FACING_LINE)
+    end
+  ```
+
 4. 整合信息
-```ruby
-  # 数据结构
-  result = {
-      matched: false,
-      pr_description: {
-        key_word: 'GithubPR_User_Facing_Changes',
-        merged_at: '',
-        content: nil
+  ```ruby
+    # 数据结构
+    result = {
+        matched: false,
+        pr_description: {
+          key_word: 'GithubPR_User_Facing_Changes',
+          merged_at: '',
+          content: nil
+        }
       }
-    }
 
-  result[:pr_description][:merged_at] = pr_merged_time_form github_response
-  result[:pr_description][:content] = pr_description_from github_response
+    result[:pr_description][:merged_at] = pr_merged_time_form github_response
+    result[:pr_description][:content] = pr_description_from github_response
 
-  def pr_merged_time_form github_response
-     github_response.body.merged_at
-  end
-  
-  # 需要 PR 的 Number, Title, Developer
-  def pr_description_from github_response
-     body = github_response.body
-     pr_developer_name = pr_developer_name_for(body.user.login)
-     "#Num#{body.number}: #{body.title}\n###Developer: #{pr_developer_name}\n#{body.body}"
-  end
+    def pr_merged_time_form github_response
+       github_response.body.merged_at
+    end
+    
+    # 需要 PR 的 Number, Title, Developer
+    def pr_description_from github_response
+       body = github_response.body
+       pr_developer_name = pr_developer_name_for(body.user.login)
+       "#Num#{body.number}: #{body.title}\n###Developer: #{pr_developer_name}\n#{body.body}"
+    end
 
-  # github_response 只提供了 login name，我们需要 username
-  # git_api 并没有提供直接获取用户名的接口，只能手动获取
-  def pr_developer_name_for login
-     pr_developer_name = MultiJson.load(RestClient.get("https://api.github.com/users/#{login}").body)['name']
-     pr_developer_name ? pr_developer_name : login
-  end
-```
+    # github_response 只提供了 login name，我们需要 username
+    # git_api 并没有提供直接获取用户名的接口，只能手动获取
+    def pr_developer_name_for login
+       pr_developer_name = MultiJson.load(RestClient.get("https://api.github.com/users/#{login}").body)['name']
+       pr_developer_name ? pr_developer_name : login
+    end
+  ```
 
 #### Step5: 存储到 Redis
 构建PrRequest Model

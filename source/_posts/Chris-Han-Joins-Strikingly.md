@@ -2,8 +2,7 @@ title: Chris Han Joins Strikingly
 date: 2015-09-06 19:57:15
 tags:
 categories:
-- Welcome
-- Frontend
+- Team
 - English
 ---
 

@@ -50,7 +50,7 @@ Introduction to HTTP CacheThe basic idea of caching is based on the prin">
 <meta property="og:site_name" content="Tech Blog">
 <meta property="og:description" content="This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.
 Introduction to HTTP CacheThe basic idea of caching is based on the prin">
-<meta property="og:updated_time" content="2015-08-31T14:14:29.000Z">
+<meta property="og:updated_time" content="2015-09-02T14:40:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Optimizing HTTP Cache in Rails">
 <meta name="twitter:description" content="This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.
@@ -239,6 +239,7 @@ Introduction to HTTP CacheThe basic idea of caching is based on the prin">
       
         <span itemprop="articleBody"><p>This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.</p>
 <h2 id="Introduction_to_HTTP_Cache">Introduction to HTTP Cache</h2><p>The basic idea of caching is based on the principle of locality, a phenomenon where the same data is accessed frequently within a relatively short time, which means we can store this data in media with higher access speed to significantly boost system performance.</p>
+<a id="more"></a>
 <p>Caching is one of the most important concepts in the evolution of computer/network architecture. Your computer’s CPU can be faster than others’ because it has a larger cache; it becomes even faster with a larger RAM, which serves as the cache of your hard disk. A hybrid hard disk has faster read times than a traditional hard disk because it has a small chunk of SSD serving as disk cache. When you visit <a href="https://www.strikingly.com/" target="_blank" rel="external">Strikingly</a>, the IP address of our server is cached in numerous DNS servers around the world so you can quickly get the address from the nearest one. When you use Strikingly and navigate from one page to another, your browser properly caches certain page content so that it doesn’t end up requesting the same content again and again if it hasn’t changed at all.</p>
 <p>The browser cache is just one typical type of HTTP cache (or web cache). An HTTP cache temporarily stores web documents/data in order to reduce bandwidth usage, lag, and server load. Besides the browser cache, some routers, proxies, and network gateways have built-in caching mechanisms as well.</p>
 <h2 id="Getting_Started">Getting Started</h2><p>HTTP cache behavior is well defined in the HTTP specification. It’s rather boring to list out the specification without any context. Since we use Rails, let’s start with <a href="https://github.com/danielglh/http-cache-example" target="_blank" rel="external">a sample Rails project</a>.</p>
@@ -337,6 +338,8 @@ Introduction to HTTP CacheThe basic idea of caching is based on the prin">
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/blog/2015/09/06/Chris-Han-Joins-Strikingly/" rel="prev">Chris Han Joins Strikingly</a>
+            
           </div>
 
           <div class="post-nav-next post-nav-item">
@@ -406,14 +409,14 @@ Introduction to HTTP CacheThe basic idea of caching is based on the prin">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">4</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">categories</span>
               
           </div>

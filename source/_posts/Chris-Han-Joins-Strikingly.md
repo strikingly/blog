@@ -11,7 +11,7 @@ categories:
 
 We are delighted to welcome Chris Han to the front-end team!
 
-Chris is a senior student from Sun Yat-sen University in Guangzhou. He loves Chinese eight-ball and dreams of making clearance with one chance. He believes that God is fair to everyone, because their every second is the same. He used to like hamburgers.
+Chris is a senior student from Sun Yat-sen University in Guangzhou. He loves Chinese eight-ball and dreams of making clearance with one chance. He believes that God is equal to everyone, because every second of everyone's life is same in length. He used to like hamburgers.
 
 {% asset_img chris.jpeg %}
 <!-- more -->

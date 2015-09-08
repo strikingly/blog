@@ -22,3 +22,5 @@ He thinks he is a dumb-ass and learns things the hard way, so what he really wan
 {% asset_img arthur.gif %}
 
 Did I mention he has a twin brother? He has a younger brother (10 mins younger, actually) who looks exactly like him. So if you see someone who looks like him sitting in the Strikingly office, ask his name first.
+
+Visit [this Strikingly site](http://arthurwxy.strikingly.com/) to know more about him.

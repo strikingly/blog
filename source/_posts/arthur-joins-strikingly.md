@@ -7,8 +7,6 @@ categories:
 - Team
 ---
 
-# Arthur Wang Joins Strikingly
-
 Arthur Wang is our “new” iOS developer. Alright, he is not new.  He has been on this team for more than 1 year. The iOS app [Strikingly](https://itunes.apple.com/us/app/strikingly/id892299884?mt=8) is developed by him.
 
 The family name Wang in Chinese means KING, so we literally call him “King Arthur” in Chinese.

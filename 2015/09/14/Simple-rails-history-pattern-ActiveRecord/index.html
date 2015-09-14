@@ -33,7 +33,7 @@
 
 
 
-  <meta name="keywords" content="Strikingly,Ruby,React.js,YC,startup,shanghai" />
+  <meta name="keywords" content="active record,pattern,rails,ruby," />
 
 
 
@@ -42,15 +42,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Tech Blog">
-<meta property="og:url" content="http://strikingly.github.io/blog/index.html">
+<meta name="description" content="ContextMany times in my career, I had to face cases where I had to keep a history of one or many tables. Most of the time, the need of history comes after the main feature itself is developed and ends">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Simple rails history pattern (ActiveRecord)">
+<meta property="og:url" content="http://strikingly.github.io/blog/2015/09/14/Simple-rails-history-pattern-ActiveRecord/index.html">
 <meta property="og:site_name" content="Tech Blog">
-<meta property="og:description">
+<meta property="og:description" content="ContextMany times in my career, I had to face cases where I had to keep a history of one or many tables. Most of the time, the need of history comes after the main feature itself is developed and ends">
+<meta property="og:updated_time" content="2015-09-14T03:00:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tech Blog">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Simple rails history pattern (ActiveRecord)">
+<meta name="twitter:description" content="ContextMany times in my career, I had to face cases where I had to keep a history of one or many tables. Most of the time, the need of history comes after the main feature itself is developed and ends">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -60,7 +61,7 @@
   };
 </script>
 
-  <title> Tech Blog </title>
+  <title> Simple rails history pattern (ActiveRecord) | Tech Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -87,9 +88,7 @@
 
 
 
-  <div class="container one-column 
-   page-home 
-">
+  <div class="container one-column page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -160,9 +159,9 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div id="content" class="content"> 
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
@@ -173,9 +172,7 @@
           
           
             
-              <a class="post-title-link" href="/blog/2015/09/14/Simple-rails-history-pattern-ActiveRecord/" itemprop="url">
-                Simple rails history pattern (ActiveRecord)
-              </a>
+              Simple rails history pattern (ActiveRecord)
             
           
         </h1>
@@ -237,8 +234,7 @@
       
 
       
-        
-          <span itemprop="articleBody"><h2 id="Context">Context</h2><p>Many times in my career, I had to face cases where I had to keep a history of one or many tables. Most of the time, the need of history comes after the main feature itself is developed and ends up in this kind of architecture:</p>
+        <span itemprop="articleBody"><h2 id="Context">Context</h2><p>Many times in my career, I had to face cases where I had to keep a history of one or many tables. Most of the time, the need of history comes after the main feature itself is developed and ends up in this kind of architecture:</p>
 <figure class="highlight gherkin"><table><tr><td class="code"><pre><span class="line">|<span class="string"> Post         </span>|<span class="string">   </span>|<span class="string"> PostHistory   </span>|</span><br><span class="line">|<span class="string">==============</span>|<span class="string">   </span>|<span class="string">===============</span>|</span><br><span class="line">|<span class="string"> author_id    </span>|<span class="string">   </span>|<span class="string"> post_id       </span>|</span><br><span class="line">|<span class="string"> title        </span>|<span class="string">   </span>|<span class="string"> title         </span>|</span><br><span class="line">|<span class="string"> content      </span>|<span class="string">   </span>|<span class="string"> content       </span>|</span><br><span class="line">|<span class="string"> published    </span>|<span class="string">   </span>|<span class="string">---------------</span>|</span><br><span class="line">|<span class="string"> published_at </span>|</span><br><span class="line">|<span class="string">--------------</span>|</span><br></pre></td></tr></table></figure>
 <p>It comes as the most natural and painless way to add the history feature to an existing entity. You can also find gems doing this job for you, in which case, they will serialize your Post in a generic history table.</p>
 <p>Both of those approaches sound sexy because they’re simple to implement and they don’t introduce a “risk” for the Post model. Problem is, they’re very hard to maintain.</p>
@@ -280,438 +276,62 @@
 <h2 id="Recommendations">Recommendations</h2><p>To update Post  from forms, I discourage you to use ActiveRecord nested_attributes pattern as long as it’s a very horrible pattern (even if it looks very convenient). Instead, you would prefer to use a form object and hide the complexity of content versioning from your user.</p>
 <h2 id="Conclusion">Conclusion</h2><p>This solution solves some problem cases but still have cons, like any other one. It has a higher cost at beginning but offers more flexibility over time, especially if you want to add features based on your history. It also allows you to easily “tag” and access some versions.</p>
 </span>
-        
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
+        <div class="post-tags">
           
+            <a href="/blog/tags/active-record/" rel="tag">#active record</a>
           
-            
-              <a class="post-title-link" href="/blog/2015/09/06/Chris-Han-Joins-Strikingly/" itemprop="url">
-                Chris Han Joins Strikingly
-              </a>
-            
+            <a href="/blog/tags/pattern/" rel="tag">#pattern</a>
           
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2015-09-06T19:57:15+08:00" content="2015-09-06">
-            2015-09-06
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; &bullet; &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Team/" itemprop="url" rel="index">
-                  <span itemprop="name">Team</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Team/English/" itemprop="url" rel="index">
-                  <span itemprop="name">English</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
+            <a href="/blog/tags/rails/" rel="tag">#rails</a>
           
-            <span class="post-comments-count">
-            &nbsp; &bullet; &nbsp;
-            <a href="/blog/2015/09/06/Chris-Han-Joins-Strikingly/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/06/Chris-Han-Joins-Strikingly/" itemprop="commentsCount"></span>
-            </a>
-          </span>
+            <a href="/blog/tags/ruby/" rel="tag">#ruby</a>
           
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
+        </div>
       
 
       
-        
-          <h2 id="New_Frontend_Engineer">New Frontend Engineer</h2><p>We are delighted to welcome Chris Han to the front-end team!</p>
-<p>Chris is a senior student from Sun Yat-sen University in Guangzhou. He loves Chinese eight-ball and dreams of making clearance with one chance. He believes that God is equal to everyone, because every second of everyone’s life is same in length. He used to like hamburgers.</p>
-<img src="/blog/2015/09/06/Chris-Han-Joins-Strikingly/chris.jpeg" alt="chris.jpeg" title="">
-          <div class="post-more-link text-center">
-            <a class="btn" href="/blog/2015/09/06/Chris-Han-Joins-Strikingly/#more" rel="contents">
-              Read more &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
           </div>
-        
-      
-    </div>
 
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
+          <div class="post-nav-next post-nav-item">
             
-              <a class="post-title-link" href="/blog/2015/08/31/Optimizing-HTTP-Cache-in-Rails/" itemprop="url">
-                Optimizing HTTP Cache in Rails
-              </a>
+              <a href="/blog/2015/09/06/Chris-Han-Joins-Strikingly/" rel="next">Chris Han Joins Strikingly</a>
             
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2015-08-31T14:46:21+08:00" content="2015-08-31">
-            2015-08-31
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; &bullet; &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Backend/" itemprop="url" rel="index">
-                  <span itemprop="name">Backend</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Backend/English/" itemprop="url" rel="index">
-                  <span itemprop="name">English</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; &bullet; &nbsp;
-            <a href="/blog/2015/08/31/Optimizing-HTTP-Cache-in-Rails/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/31/Optimizing-HTTP-Cache-in-Rails/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.</p>
-<h2 id="Introduction_to_HTTP_Cache">Introduction to HTTP Cache</h2><p>The basic idea of caching is based on the principle of locality, a phenomenon where the same data is accessed frequently within a relatively short time, which means we can store this data in media with higher access speed to significantly boost system performance.</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/blog/2015/08/31/Optimizing-HTTP-Cache-in-Rails/#more" rel="contents">
-              Read more &raquo;
-            </a>
           </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
+        </div>
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-      
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/blog/2015/08/26/navigating-react-ecosystem/" itemprop="url">
-                探索 React 生态圈
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2015-08-26T15:59:29+08:00" content="2015-08-26">
-            2015-08-26
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; &bullet; &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Frontend/" itemprop="url" rel="index">
-                  <span itemprop="name">Frontend</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Frontend/中文/" itemprop="url" rel="index">
-                  <span itemprop="name">中文</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; &bullet; &nbsp;
-            <a href="/blog/2015/08/26/navigating-react-ecosystem/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/26/navigating-react-ecosystem/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>（本文基于<a href="http://strikingly.github.io/blog/2015/07/14/react-europe-conf/">达峰的分享</a>扩充而成，并刊登在 <a href="http://programmer.csdn.net/">CSDN 程序员杂志</a>8月A上）</p>
-<h1 id="探索_React_生态圈">探索 React 生态圈</h1><p>2004年，对于前端社区来说，是里程碑式的一年。Gmail 横空出世，它带来的基于前端渲染的原生应用级别的体验，相对于之前的服务端渲染网页可谓提升了一个时代，触动了用户的G点。自此，前端渲染的网站成为无数开发者追逐的方向。</p>
-<p>为了更好地开发前端渲染的「原生级别的」网站，包括 Backbone 和 Angular 在内的一系列前端框架应运而生，并迅速获得了大规模的采用。但是很快地，新的性能和 SEO 问题也接踵而来。几经尝试后，Twitter 甚至从前端渲染重回服务器渲染，而 Strikingly 也面对过同样棘手的问题。</p>
-<p>2014年，React 进入我们的视线。让人耳目一新的是，对于其他开源框架遇到的种种问题，React 都自信地给出了解答。几乎没有犹豫，我们开始使用 React 来重构 Strikingly。若干年后，当我们回望，也许会发现， 2014年也是前端社区里程碑式的一年。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/blog/2015/08/26/navigating-react-ecosystem/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
+    <div class="post-spread">
       
     </div>
+  </div>
 
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/blog/2015/07/14/react-europe-conf/" itemprop="url">
-                ReactEurope Conf 参会感想
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          Posted on
-          <time itemprop="dateCreated" datetime="2015-07-14T22:06:43+08:00" content="2015-07-14">
-            2015-07-14
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; &bullet; &nbsp; In
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Frontend/" itemprop="url" rel="index">
-                  <span itemprop="name">Frontend</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Frontend/中文/" itemprop="url" rel="index">
-                  <span itemprop="name">中文</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-            &nbsp; &bullet; &nbsp;
-            <a href="/blog/2015/07/14/react-europe-conf/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/14/react-europe-conf/" itemprop="commentsCount"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <p>React 带来的革命性创新是前端世界过去几年最激动人心的变化。自从接触 React 以来，我深信 React 会改变客户端开发者（包括前端、iOS 和 Android）的开发体验。这次在巴黎举办的 <a href="https://www.react-europe.org/2015.html">ReactEurope Conf</a> 大会是继第一次在 Facebook 总部举办后最大的 React 活动。超过10位来自React、GraphQL、Relay 团队的核心技术成员也出席大会进行分享。这次代表 <a href="https://www.strikingly.com/">Strikingly</a>（似乎也是国内唯一家公司）去参加，想写下一些参会感想。</p>
-<p>Keynote [1] 讲师是来自 Facebook 的 Christopher Chedeau (vjeux)。他分享了 React 生态系统四大方面 （Data, Targets, Language, Packager）的变化。这次大会所有的内容我觉得也都是这四方面的延伸。我印象最深的是 Data 和 Targets，也是这篇文章主要想分享的内容。</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/blog/2015/07/14/react-europe-conf/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-  </section>
-
-  
  </div>
 
         
 
+        
+          <div class="comments" id="comments">
+            
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+              </div>
+            
+          </div>
         
       </div>
 
@@ -728,6 +348,15 @@
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-inner">
 
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
       
 
       <section class="site-overview">
@@ -789,6 +418,17 @@
       </section>
 
       
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Context"><span class="nav-number">1.</span> <span class="nav-text">Context</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Separate_“meta”_and_“content”"><span class="nav-number">2.</span> <span class="nav-text">Separate “meta” and “content”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Making_it_a_bit_more_transparent"><span class="nav-number">3.</span> <span class="nav-text">Making it a bit more transparent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Plugging_features"><span class="nav-number">4.</span> <span class="nav-text">Plugging features</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Recommendations"><span class="nav-number">5.</span> <span class="nav-text">Recommendations</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">6.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
 
     </div>
   </aside>
@@ -837,9 +477,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'strikinglytech';
-      var disqus_identifier = 'index.html';
-      var disqus_title = '';
-      var disqus_url = '';
+      var disqus_identifier = '2015/09/14/Simple-rails-history-pattern-ActiveRecord/';
+      var disqus_title = 'Simple rails history pattern (ActiveRecord)';
+      var disqus_url = 'http://strikingly.github.io/blog/2015/09/14/Simple-rails-history-pattern-ActiveRecord/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
@@ -850,6 +490,8 @@
       }
 
       run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
       
     </script>
   
@@ -876,6 +518,165 @@
   <script type="text/javascript" src="/blog/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
 
   
+  
+<script type="text/javascript" src="/blog/js/bootstrap.scrollspy.js?v=0.4.4" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
 
   <script type="text/javascript">
     $(document).ready(function () {

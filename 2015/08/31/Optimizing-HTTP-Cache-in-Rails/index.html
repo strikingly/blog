@@ -50,7 +50,7 @@ Introduction to HTTP CacheThe basic idea of caching is based on the prin">
 <meta property="og:site_name" content="Tech Blog">
 <meta property="og:description" content="This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.
 Introduction to HTTP CacheThe basic idea of caching is based on the prin">
-<meta property="og:updated_time" content="2015-09-02T14:40:43.000Z">
+<meta property="og:updated_time" content="2015-09-14T03:00:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Optimizing HTTP Cache in Rails">
 <meta name="twitter:description" content="This is the first blog post of a series I’d like to write about caching and how caching improves the performance of Strikingly.
@@ -287,8 +287,8 @@ Introduction to HTTP CacheThe basic idea of caching is based on the prin">
 <p>First of all, if the resource is passed directly as the value of the <code>etag</code> key as we just did (<code>etag: @students</code> in Code Snippet 5), the <code>cache_key</code> method of the resource will be used to calculate the Etag. In this case, we should make sure that the <code>cache_key</code> method reflects the definition of fresh/stale resource in your business domain. Sometimes we may not want all properties of the resource go to into the calculation, because the more properties involved, the more strict caching control becomes. Since the client request is a representation of the resource (notice it’s never the resource itself), it’s not necessary to include some less important properties or user invisible properties.</p>
 <p>Besides that, the last modified timestamp is usually the <code>updated_at</code> property of the resource (or the maximum among all resources in a collection if the collection is requested). It gives us two hints:</p>
 <ul>
-<li>for all models that we wish to cache, make sure the <code>timestamps</code> macro is used in the migration</li>
-<li>if you update any properties of the model that are use visible and should be involved in the revalidation, make sure you use <code>update_attributes</code> , <code>save</code> or <code>save!</code> instead of <code>update_attribute</code>, even if only one property is updated, because <code>update_attribute</code> doesn’t change <code>updated_at</code></li>
+<li>For all models that we wish to cache, make sure the <code>timestamps</code> macro is used in the migration</li>
+<li>If you update any properties of the model that are use visible and should be involved in the revalidation, make sure <code>updated_at</code> is updated as well. Methods like <code>update_attribute</code>, <code>update_attributes</code>, <code>save</code> and <code>save!</code> updates it automatically, while others, such as <code>update_column</code>, <code>update_columns</code>, <code>update_all</code>, don’t update <code>updated_at</code> unless you explicitly set the value.</li>
 </ul>
 <p>There are other methods provided by Rails for cache control:</p>
 <ul>
@@ -409,7 +409,7 @@ Introduction to HTTP CacheThe basic idea of caching is based on the prin">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
@@ -423,7 +423,7 @@ Introduction to HTTP CacheThe basic idea of caching is based on the prin">
 
           <div class="site-state-item site-state-tags">
             
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">tags</span>
               
           </div>

@@ -209,7 +209,7 @@ We can combine a bunch of different shadows to make a really *touchable* button.
 
 # With ShadowPainter... anything is possible!
 
-You might have noticed that you can add multiple text shadows in a comma-separated list. Well, there's no limit on how many you can add. So we can paint anything we want, pixel-by-pixel, with each pixel being a separate text shadow. Here's an image generated using just that method! (Don't actually do this... it's horrible for performance.)
+You might have noticed that you can add multiple box shadows in a comma-separated list. Well, there's no limit on how many you can add. So we can paint anything we want, pixel-by-pixel, with each pixel being a separate box shadow. Here's an image generated using just that method! (Don't actually do this... it's horrible for performance.)
 
 ```
 .pixels{

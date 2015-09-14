@@ -30,6 +30,8 @@ It comes as the most natural and painless way to add the history feature to an e
 
 Both of those approaches sound sexy because they’re simple to implement and they don’t introduce a “risk” for the Post model. Problem is, they’re very hard to maintain.
 
+<!-- more -->
+
 In the first case, every time we run a migration on the post table, we will have to run it on the PostHistory too. Double the work. If you have special columns (enum, serialized stuff in any manner), you also have to maintain the same code in both classes. Or you have to extract everything in modules to share it between classes, which makes the code less readable. If you use services, it can lead to even more complicated situations.
 
 In the second case, if your Post model changes, restoring the serialized version from history will become hard, if not impossible. If you want to historize only a subset of properties from Post, it’s also inconvenient. Plus, if you have serialized columns in Post table, you will end with serialized data IN serialized data in the history table. Something you don’t want to deal with in case of bugs.

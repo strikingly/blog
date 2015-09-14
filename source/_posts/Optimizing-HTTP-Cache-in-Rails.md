@@ -213,8 +213,8 @@ First of all, if the resource is passed directly as the value of the `etag` key 
 
 Besides that, the last modified timestamp is usually the `updated_at` property of the resource (or the maximum among all resources in a collection if the collection is requested). It gives us two hints:
 
-* for all models that we wish to cache, make sure the `timestamps` macro is used in the migration
-* if you update any properties of the model that are use visible and should be involved in the revalidation, make sure you use `update_attributes` , `save` or `save!` instead of `update_attribute`, even if only one property is updated, because `update_attribute` doesn’t change `updated_at`
+* For all models that we wish to cache, make sure the `timestamps` macro is used in the migration
+* If you update any properties of the model that are use visible and should be involved in the revalidation, make sure `updated_at` is updated as well. Methods like `update_attribute`, `update_attributes`, `save` and `save!` updates it automatically, while others, such as `update_column`, `update_columns`, `update_all`, don't update `updated_at` unless you explicitly set the value.
 
 There are other methods provided by Rails for cache control:
 

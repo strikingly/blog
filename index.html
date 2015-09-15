@@ -238,48 +238,115 @@
 
       
         
-          <span itemprop="articleBody"><h2 id="Context">Context</h2><p>Many times in my career, I had to face cases where I had to keep a history of one or many tables. Most of the time, the need of history comes after the main feature itself is developed and ends up in this kind of architecture:</p>
+          <h2 id="Context">Context</h2><p>Many times in my career, I had to face cases where I had to keep a history of one or many tables. Most of the time, the need of history comes after the main feature itself is developed and ends up in this kind of architecture:</p>
 <figure class="highlight gherkin"><table><tr><td class="code"><pre><span class="line">|<span class="string"> Post         </span>|<span class="string">   </span>|<span class="string"> PostHistory   </span>|</span><br><span class="line">|<span class="string">==============</span>|<span class="string">   </span>|<span class="string">===============</span>|</span><br><span class="line">|<span class="string"> author_id    </span>|<span class="string">   </span>|<span class="string"> post_id       </span>|</span><br><span class="line">|<span class="string"> title        </span>|<span class="string">   </span>|<span class="string"> title         </span>|</span><br><span class="line">|<span class="string"> content      </span>|<span class="string">   </span>|<span class="string"> content       </span>|</span><br><span class="line">|<span class="string"> published    </span>|<span class="string">   </span>|<span class="string">---------------</span>|</span><br><span class="line">|<span class="string"> published_at </span>|</span><br><span class="line">|<span class="string">--------------</span>|</span><br></pre></td></tr></table></figure>
 <p>It comes as the most natural and painless way to add the history feature to an existing entity. You can also find gems doing this job for you, in which case, they will serialize your Post in a generic history table.</p>
 <p>Both of those approaches sound sexy because they’re simple to implement and they don’t introduce a “risk” for the Post model. Problem is, they’re very hard to maintain.</p>
-<p>In the first case, every time we run a migration on the post table, we will have to run it on the PostHistory too. Double the work. If you have special columns (enum, serialized stuff in any manner), you also have to maintain the same code in both classes. Or you have to extract everything in modules to share it between classes, which makes the code less readable. If you use services, it can lead to even more complicated situations.</p>
-<p>In the second case, if your Post model changes, restoring the serialized version from history will become hard, if not impossible. If you want to historize only a subset of properties from Post, it’s also inconvenient. Plus, if you have serialized columns in Post table, you will end with serialized data IN serialized data in the history table. Something you don’t want to deal with in case of bugs.</p>
-<p>The other main problem is if you need to use history in another context than just reading values and showing them to a human, you will have a schizophrenic code, using sometimes Post, sometimes PostHistory.</p>
-<p>This architecture also come with the classic problem “when do we create a new entry?”:</p>
-<ul>
-<li>before saving will imply that the last version is not in history, force you to read from 2 tables to have the complete history</li>
-<li>after saving will imply that the last version is in two different places (content duplicated)</li>
-</ul>
-<p>Let’s take a simple example, restore values from history:</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># services/posts/historize_service.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HistorizeService</span></span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>run(post)</span><br><span class="line">    history = <span class="constant">PostHistory</span>.create!(</span><br><span class="line">      <span class="symbol">title:</span> post.title,</span><br><span class="line">      <span class="symbol">content:</span> post.content</span><br><span class="line">    )</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># services/posts/restore_from_history_service.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestoreFromHistoryService</span></span></span><br><span class="line">  <span class="keyword">attr_reader</span> <span class="symbol">:historize_service</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>initialize(<span class="symbol">historize_service:</span>)</span><br><span class="line">    <span class="variable">@historize_service</span> = historize_service</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>run(post, post_history)</span><br><span class="line">    <span class="constant">Post</span>.transaction <span class="keyword">do</span></span><br><span class="line">      historize_service.run(post)</span><br><span class="line">      post.title = post_history.title</span><br><span class="line">      post.content = post_history.content</span><br><span class="line">      <span class="comment"># this list can be very long</span></span><br><span class="line">      post.save!</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>Also consider that in this specific case, published state is ambiguous. And if many versions in the history have different meanings, it’s hard to identify which one has what meaning. We could transfer “publish” informations into the history table but that would mean history would carry contextual informations and we would have to maintain the whole history to ensure only one version is published at a time. </p>
-<h2 id="Separate_“meta”_and_“content”">Separate “meta” and “content”</h2><p>A more flexible solution you can consider is to separate in two separate models what is content (ie: what we need to keep track of over time) and what’s immutable over time.</p>
-<figure class="highlight gherkin"><table><tr><td class="code"><pre><span class="line">|<span class="string"> Post                 </span>|<span class="string">   </span>|<span class="string"> Post::Content </span>|</span><br><span class="line">|<span class="string">======================</span>|<span class="string">   </span>|<span class="string">=============</span>|</span><br><span class="line">|<span class="string"> author_id            </span>|<span class="string">   </span>|<span class="string"> post_id     </span>|</span><br><span class="line">|<span class="string"> current_content_id   </span>|<span class="string">   </span>|<span class="string"> title       </span>|</span><br><span class="line">|<span class="string"> published_content_id </span>|<span class="string">   </span>|<span class="string"> content     </span>|</span><br><span class="line">|<span class="string"> last_published_at    </span>|<span class="string">   </span>|<span class="string"> created_at  </span>|</span><br><span class="line">|<span class="string">----------------------</span>|<span class="string">   </span>|<span class="string">-------------</span>|</span><br></pre></td></tr></table></figure>
-<p>Using this design, whatever version you use, you will always manipulate the same type of object. You don’t have to double the logic and migrations. You keep your data stable over time. </p>
-<p>To give specific meaning to specific versions, we will rely on foreign keys. Post::Content should not know it’s role in outside models. Let’s keep it as small as possible and focus on data.</p>
-<p>Your post model will look like this:</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># models/post.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span> <span class="inheritance">&lt; <span class="parent">ActiveRecord::Base</span></span></span></span><br><span class="line">  <span class="comment"># Associations</span></span><br><span class="line">  has_many <span class="symbol">:contents</span></span><br><span class="line">  </span><br><span class="line">  has_one <span class="symbol">:current_content</span>, <span class="symbol">class_name:</span> <span class="string">'Post::Content'</span></span><br><span class="line">  has_one <span class="symbol">:published_content</span>, <span class="symbol">class_name:</span> <span class="string">'Post::Content'</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># Methods</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>published?</span><br><span class="line">    published_content_id?</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>Create a new entry in history is as simple as that:</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># services/posts/historize_service.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HistorizeService</span></span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>run(post)</span><br><span class="line">    <span class="constant">Post</span>.transaction <span class="keyword">do</span></span><br><span class="line">      new_content = post.current_content.dup</span><br><span class="line">      new_content.save!</span><br><span class="line">      post.update_attributes!(<span class="symbol">current_content:</span> new_content)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>Compare to the previous version, we don’t need to modify this service every time we add (or remove) a property. It’s stable over time, that’s all we want.</p>
-<p>The simplest way to deal with versions is to consider our Post::Content objects as immutable</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># services/posts/content/update_service.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UpdateService</span></span></span><br><span class="line">  <span class="comment"># params</span></span><br><span class="line">  <span class="comment"># </span></span><br><span class="line">  <span class="comment"># * post: an instance of Post</span></span><br><span class="line">  <span class="comment"># * properties: a hash containing the following keys</span></span><br><span class="line">  <span class="comment">#   * title: (string) optional</span></span><br><span class="line">  <span class="comment">#   * content: (string) optional</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>run(post, properties)</span><br><span class="line">    new_content = post.current_content.dup</span><br><span class="line">    new_content.attributes = properties</span><br><span class="line">    new_content.save!</span><br><span class="line">    post.update_attributes!(<span class="symbol">current_content:</span> new_content)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>This service will create a new content entry every time you want to update content properties (title and/or content). If you want to prevent blank entries that would create useless history entry, you can use a form object to validate the data before calling the service.</p>
-<p>Let’s keep going with restoring an entry</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># services/posts/restore_content_from_history_service.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestoreContentFromHistoryService</span></span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>run(post, content)</span><br><span class="line">    <span class="constant">Post</span>.transaction <span class="keyword">do</span></span><br><span class="line">      <span class="comment"># in order to keep the structure coherent, we need to</span></span><br><span class="line">      <span class="comment"># create a new entry instead of linking the old one.</span></span><br><span class="line">      new_content = content.dup</span><br><span class="line">      new_content.save!</span><br><span class="line">      post.update_attributes!(<span class="symbol">current_version:</span> new_content)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>Let’s see how we do the publishing now</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># services/posts/publish_service.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PublishService</span></span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>run(post)</span><br><span class="line">    post.update_attributes!(</span><br><span class="line">      <span class="symbol">published_content:</span> post.current_content,</span><br><span class="line">      <span class="symbol">last_published_at:</span> <span class="constant">Time</span>.now</span><br><span class="line">    )</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>And voila! This design is flexible enough to add many features that won’t compromise the structure.</p>
-<h2 id="Making_it_a_bit_more_transparent">Making it a bit more transparent</h2><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># models/post.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span> <span class="inheritance">&lt; <span class="parent">ActiveRecord::Base</span></span></span></span><br><span class="line">  <span class="comment"># Delegations</span></span><br><span class="line">  delegate <span class="symbol">:title</span>, <span class="symbol">:content</span>, <span class="symbol">to:</span> <span class="symbol">:current_content</span>, <span class="symbol">allow_nil:</span> <span class="keyword">true</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># allow you to access directly post.title</span></span><br><span class="line"><span class="comment"># and masking the complexity of post.current_content.title</span></span><br><span class="line"><span class="comment"># (see demeter law https://en.wikipedia.org/wiki/Law_of_Demeter)</span></span><br></pre></td></tr></table></figure>
-<h2 id="Plugging_features">Plugging features</h2><p>Adding version numbers, for example</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># models/posts/content.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post::Content</span> <span class="inheritance">&lt; <span class="parent">ActiveRecord::Base</span></span></span></span><br><span class="line">  <span class="comment"># Callbacks</span></span><br><span class="line">  before_create <span class="symbol">:tag_version_number</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># Methods</span></span><br><span class="line">  </span><br><span class="line">  private</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>tag_version_number</span><br><span class="line">    <span class="keyword">self</span>.version = generate_version_number</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> </span>generate_version_number</span><br><span class="line">    <span class="comment"># optimistic solution</span></span><br><span class="line">    (<span class="keyword">self</span>.<span class="keyword">class</span>.where(<span class="symbol">post_id:</span> post_id)</span><br><span class="line">               .maximum(<span class="symbol">:version</span>) || <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<p>This could also be extracted to a module, exposed as a method like</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="tag">has_versions_number</span> <span class="rule"><span class="attribute">scope</span>:<span class="value"> :post_id</span></span></span><br></pre></td></tr></table></figure>
-<p>You can even disable update at model level to ensure no one is changing the history</p>
-<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># lib/active_record/immutable_model.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">ActiveRecord</span></span></span><br><span class="line">  <span class="class"><span class="keyword">module</span> <span class="title">ImmutableModel</span></span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">UpdateImmutableModelException</span> <span class="inheritance">&lt; <span class="parent">Exception</span></span></span></span><br><span class="line">      <span class="function"><span class="keyword">def</span> </span>initialize(msg)</span><br><span class="line">        <span class="keyword">super</span>(<span class="string">"Immutable model can't be updated"</span>)</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line">    extend <span class="constant">ActiveSupport::Concern</span></span><br><span class="line">    </span><br><span class="line">    included <span class="keyword">do</span></span><br><span class="line">      before_update <span class="symbol">:prevent_update</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    </span><br><span class="line">    private</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> </span>prevent_update</span><br><span class="line">      raise <span class="constant">UpdateImmutableModelException</span>.new</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>        </span><br><span class="line"></span><br><span class="line"><span class="comment"># models/post/content.rb</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post::Content</span> <span class="inheritance">&lt; <span class="parent">ActiveRecord::Base</span></span></span></span><br><span class="line">  <span class="keyword">include</span> <span class="constant">ActiveRecord::ImmutableModel</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
-<h2 id="Recommendations">Recommendations</h2><p>To update Post  from forms, I discourage you to use ActiveRecord nested_attributes pattern as long as it’s a very horrible pattern (even if it looks very convenient). Instead, you would prefer to use a form object and hide the complexity of content versioning from your user.</p>
-<h2 id="Conclusion">Conclusion</h2><p>This solution solves some problem cases but still have cons, like any other one. It has a higher cost at beginning but offers more flexibility over time, especially if you want to add features based on your history. It also allows you to easily “tag” and access some versions.</p>
-</span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/blog/2015/09/14/Simple-rails-history-pattern-ActiveRecord/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/blog/2015/09/07/css3-shadows/" itemprop="url">
+                CSS3 Shadows Are Crazy Awesome
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          Posted on
+          <time itemprop="dateCreated" datetime="2015-09-07T15:37:50+08:00" content="2015-09-07">
+            2015-09-07
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; &bullet; &nbsp; In
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/blog/categories/Frontend/" itemprop="url" rel="index">
+                  <span itemprop="name">Frontend</span>
+                </a>
+              </span>
+
+              
+              
+                , 
+              
+
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/blog/categories/Frontend/English/" itemprop="url" rel="index">
+                  <span itemprop="name">English</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+            &nbsp; &bullet; &nbsp;
+            <a href="/blog/2015/09/07/css3-shadows/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/css3-shadows/" itemprop="commentsCount"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <p>When I first learned about shadows in CSS3, I was like “Oh, cool.” I kind of shrugged it off, since it didn’t feel particularly world-changing. But as I built more and more websites, I’ve found that shadows are awesomely flexible, especially for a handful of particularly beautiful, subtle effects.</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/blog/2015/09/07/css3-shadows/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -738,21 +805,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">categories</span>
               
           </div>
 
           <div class="site-state-item site-state-tags">
             
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">tags</span>
               
           </div>

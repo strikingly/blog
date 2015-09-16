@@ -1,6 +1,6 @@
 title: 'CSS3 Shadows Are Crazy Awesome'
 date: 2015-09-07 15:37:50
-author: teng
+author: tengbao
 tags:
 - css
 - css3
@@ -13,8 +13,6 @@ categories:
 ---
 
 When I first learned about shadows in CSS3, I was like "Oh, cool." I kind of shrugged it off, since it didn't feel particularly world-changing. But as I built more and more websites, I've found that shadows are awesomely flexible, especially for a handful of particularly beautiful, subtle effects.
-
-<!-- more -->
 
 # A Naive Example
 
@@ -31,6 +29,8 @@ When I first learned about shadows in CSS3, I was like "Oh, cool." I kind of shr
 <div class="s-html-example"> <div style="background: orange; box-shadow: 5px 10px 7px rgba(0,50,100,0.65);"> Hello World </div> </div>
 
 That's a great example of how *not* to use shadows &mdash; it's loud, obnoxious, and just ugly. It reminds us of the late 90s when we just discovered shadows in Photoshop or MS Word and we just threw them on everything.
+
+<!-- more -->
 
 If you're not familiar with the basics of CSS3 shadows, here's a rundown: In this example, `5px` is the x-offset, `10px` is the y-offset, and `7px` is the blur radius. `rgba(0,50,150,0.5)` is the shadow color, which is a semi-transparent navy color.
 

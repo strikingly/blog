@@ -48,7 +48,7 @@
 <meta property="og:url" content="http://strikingly.github.io/blog/2015/10/22/Thoughts-on-Polyfill-Libraries/index.html">
 <meta property="og:site_name" content="Tech Blog">
 <meta property="og:description" content="This the first post of a series on web API polyfill libraries. In this post, we are going to discuss why polyfill is a good idea and what are some of the cool modern web APIs coming to browsers. In th">
-<meta property="og:updated_time" content="2015-10-22T08:35:59.000Z">
+<meta property="og:updated_time" content="2015-10-22T08:57:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Thoughts on Polyfill Libraries">
 <meta name="twitter:description" content="This the first post of a series on web API polyfill libraries. In this post, we are going to discuss why polyfill is a good idea and what are some of the cool modern web APIs coming to browsers. In th">
@@ -247,6 +247,7 @@
 <p>A polyfill library is in direct contrast to a library like jQuery, where it invents its own APIs to provide the missing implementations:</p>
 <figure class="highlight vbscript"><table><tr><td class="code"><pre><span class="line">timeLib.epoch = <span class="built_in">Date</span>.<span class="built_in">now</span> || <span class="keyword">function</span> <span class="built_in">now</span>() &#123;</span><br><span class="line">    `return <span class="keyword">new</span> <span class="built_in">Date</span>().getTime()`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Given the two styles of methods to bridge the gaps between browsers with varying degree of standard conformance, which one is better?</p>
+<a id="more"></a>
 <h2 id="Comparison_of_Polyfill_Libraries_and_Alternatives">Comparison of Polyfill Libraries and Alternatives</h2><p>Inventing custom APIs was a good idea back in the old days, where extending native objects was <a href="http://perfectionkills.com/whats-wrong-with-extending-the-dom/" target="_blank" rel="external"><em>really dangerous</em></a>, because how they should behave was not well defined. But with the up coming <a href="http://www.w3.org/TR/WebIDL/" target="_blank" rel="external"><em>Web IDL specification</em></a> and most nonconforming browsers have lost market share significantly, extending native objects is no longer a pandora box.</p>
 <p>Custom APIs also have a very big issue: it creates fragments unnecessarily. A jQuery slider won’t work, for example, unless the jQuery library is also included in the page. Same goes for components written using Dojo, Prototype, etc. So these different UI component collections are separated simply because the DOM libraries they depend on have different APIs for doing the same things.</p>
 <p>You might say these DOM libraries exist for a reason. Native APIs like <code>XMLHttpRequest</code>, DOM operations are too awkward to use comparing to their counterparts in the third party libraries. The good news is that web standard has come a long way since these libraries were written.</p>

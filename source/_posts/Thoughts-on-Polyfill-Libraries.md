@@ -33,6 +33,8 @@ timeLib.epoch = Date.now || function now() {
 
 Given the two styles of methods to bridge the gaps between browsers with varying degree of standard conformance, which one is better?
 
+<!-- more -->
+
 ## Comparison of Polyfill Libraries and Alternatives
 
 Inventing custom APIs was a good idea back in the old days, where extending native objects was [_really dangerous_](http://perfectionkills.com/whats-wrong-with-extending-the-dom/), because how they should behave was not well defined. But with the up coming [_Web IDL specification_](http://www.w3.org/TR/WebIDL/) and most nonconforming browsers have lost market share significantly, extending native objects is no longer a pandora box.

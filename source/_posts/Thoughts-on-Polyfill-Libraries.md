@@ -72,7 +72,7 @@ node.queryAll('>li a')
 
 ```
 Object.assign({a: 1}, {b: 2}) // aka, extend
-Array.from({'0': 0, '1': 1}) // aka, [].slice.call(...)
+Array.from({'0': 0, '1': 1, length: 2}) // aka, [].slice.call(...)
 ```
 
 And [Web animations](http://www.w3.org/TR/web-animations/) for writing sophisticated and butter smooth animations:

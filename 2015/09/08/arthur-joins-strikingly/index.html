@@ -33,7 +33,7 @@
 
 
 
-  <meta name="keywords" content="javascript,polyfill," />
+  <meta name="keywords" content="English,Team," />
 
 
 
@@ -42,16 +42,20 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.4" />
 
 
-<meta name="description" content="This the first post of a series on web API polyfill libraries. In this post, we are going to discuss why polyfill is a good idea and what are some of the cool modern web APIs coming to browsers. In th">
+<meta name="description" content="Arthur Wang is our “new” iOS developer. Alright, he is not new.  He has been on this team for more than 1 year. The iOS app Strikingly is developed by him.
+The family name Wang in Chinese means KING,">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Thoughts on Polyfill Libraries">
-<meta property="og:url" content="http://strikingly.github.io/blog/2015/10/22/Thoughts-on-Polyfill-Libraries/index.html">
+<meta property="og:title" content="Arthur Wang Joins Strikingly">
+<meta property="og:url" content="http://strikingly.github.io/blog/2015/09/08/arthur-joins-strikingly/index.html">
 <meta property="og:site_name" content="Tech Blog">
-<meta property="og:description" content="This the first post of a series on web API polyfill libraries. In this post, we are going to discuss why polyfill is a good idea and what are some of the cool modern web APIs coming to browsers. In th">
+<meta property="og:description" content="Arthur Wang is our “new” iOS developer. Alright, he is not new.  He has been on this team for more than 1 year. The iOS app Strikingly is developed by him.
+The family name Wang in Chinese means KING,">
+<meta property="og:image" content="http://strikingly.github.io/blog/blog/2015/09/08/arthur-joins-strikingly/arthur.gif">
 <meta property="og:updated_time" content="2015-10-22T09:18:16.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Thoughts on Polyfill Libraries">
-<meta name="twitter:description" content="This the first post of a series on web API polyfill libraries. In this post, we are going to discuss why polyfill is a good idea and what are some of the cool modern web APIs coming to browsers. In th">
+<meta name="twitter:title" content="Arthur Wang Joins Strikingly">
+<meta name="twitter:description" content="Arthur Wang is our “new” iOS developer. Alright, he is not new.  He has been on this team for more than 1 year. The iOS app Strikingly is developed by him.
+The family name Wang in Chinese means KING,">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -61,7 +65,7 @@
   };
 </script>
 
-  <title> Thoughts on Polyfill Libraries | Tech Blog </title>
+  <title> Arthur Wang Joins Strikingly | Tech Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
@@ -172,7 +176,7 @@
           
           
             
-              Thoughts on Polyfill Libraries
+              Arthur Wang Joins Strikingly
             
           
         </h1>
@@ -180,15 +184,11 @@
 
       <div class="post-meta">
         
-          <span class="post-author">
-            glen
-          </span>
-        
         <span class="post-time">
           &nbsp; &bullet; &nbsp;
           Posted on
-          <time itemprop="dateCreated" datetime="2015-10-22T16:22:15+08:00" content="2015-10-22">
-            2015-10-22
+          <time itemprop="dateCreated" datetime="2015-09-08T09:49:09+08:00" content="2015-09-08">
+            2015-09-08
           </time>
         </span>
 
@@ -197,20 +197,8 @@
             &nbsp; &bullet; &nbsp; In
             
               <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Frontend/" itemprop="url" rel="index">
-                  <span itemprop="name">Frontend</span>
-                </a>
-              </span>
-
-              
-              
-                , 
-              
-
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/blog/categories/Frontend/English/" itemprop="url" rel="index">
-                  <span itemprop="name">English</span>
+                <a href="/blog/categories/Team/" itemprop="url" rel="index">
+                  <span itemprop="name">Team</span>
                 </a>
               </span>
 
@@ -225,8 +213,8 @@
           
             <span class="post-comments-count">
             &nbsp; &bullet; &nbsp;
-            <a href="/blog/2015/10/22/Thoughts-on-Polyfill-Libraries/#comments" itemprop="discussionUrl">
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/22/Thoughts-on-Polyfill-Libraries/" itemprop="commentsCount"></span>
+            <a href="/blog/2015/09/08/arthur-joins-strikingly/#comments" itemprop="discussionUrl">
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/08/arthur-joins-strikingly/" itemprop="commentsCount"></span>
             </a>
           </span>
           
@@ -241,31 +229,16 @@
       
 
       
-        <span itemprop="articleBody"><p>This the first post of a series on web API polyfill libraries. In this post, we are going to discuss why polyfill is a good idea and what are some of the cool modern web APIs coming to browsers. In the second one, we will discuss some of the drawbacks current polyfill libraries have and also challenges of writing good polyfill libraries. And finally, we take polyfill libraries to the next level by discussing a whole new way of consuming them.</p>
-<h2 id="Introduction_to_Polyfill">Introduction to Polyfill</h2><p>The term polyfill in front end world means code that provides APIs the browser is supposed to offer natively, if they are currently missing. Here is some sample polyfill code, which makes <code>Date.now</code> defined in ECMAScript v5 available to all browsers:</p>
-<figure class="highlight vbscript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (!<span class="built_in">Date</span>.<span class="built_in">now</span>) &#123;</span><br><span class="line">    <span class="built_in">Date</span>.<span class="built_in">now</span> = <span class="keyword">function</span> <span class="built_in">now</span>() &#123;</span><br><span class="line">        `return <span class="keyword">new</span> <span class="built_in">Date</span>().getTime()`</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>A polyfill library is in direct contrast to a library like jQuery, where it invents its own APIs to provide the missing implementations:</p>
-<figure class="highlight vbscript"><table><tr><td class="code"><pre><span class="line">timeLib.epoch = <span class="built_in">Date</span>.<span class="built_in">now</span> || <span class="keyword">function</span> <span class="built_in">now</span>() &#123;</span><br><span class="line">    `return <span class="keyword">new</span> <span class="built_in">Date</span>().getTime()`</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Given the two styles of methods to bridge the gaps between browsers with varying degree of standard conformance, which one is better?</p>
+        <span itemprop="articleBody"><p>Arthur Wang is our “new” iOS developer. Alright, he is not new.  He has been on this team for more than 1 year. The iOS app <a href="https://itunes.apple.com/us/app/strikingly/id892299884?mt=8" target="_blank" rel="external">Strikingly</a> is developed by him.</p>
+<p>The family name Wang in Chinese means KING, so we literally call him “King Arthur” in Chinese.</p>
 <a id="more"></a>
-<h2 id="Comparison_of_Polyfill_Libraries_and_Alternatives">Comparison of Polyfill Libraries and Alternatives</h2><p>Inventing custom APIs was a good idea back in the old days, where extending native objects was <a href="http://perfectionkills.com/whats-wrong-with-extending-the-dom/" target="_blank" rel="external"><em>really dangerous</em></a>, because how they should behave was not well defined. But with the up coming <a href="http://www.w3.org/TR/WebIDL/" target="_blank" rel="external"><em>Web IDL specification</em></a> and most nonconforming browsers have lost market share significantly, extending native objects is no longer a pandora box.</p>
-<p>Custom APIs also have a very big issue: it creates fragments unnecessarily. A jQuery slider won’t work, for example, unless the jQuery library is also included in the page. Same goes for components written using Dojo, Prototype, etc. So these different UI component collections are separated simply because the DOM libraries they depend on have different APIs for doing the same things.</p>
-<p>You might say these DOM libraries exist for a reason. Native APIs like <code>XMLHttpRequest</code>, DOM operations are too awkward to use comparing to their counterparts in the third party libraries. The good news is that web standard has come a long way since these libraries were written.</p>
-<p>We have promise based <a href="https://fetch.spec.whatwg.org/" target="_blank" rel="external">fetch</a> to replace callback based <code>XMLHttpRequest</code>:</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// return a promise object</span></span><br><span class="line"><span class="keyword">var</span> fetched = fetch(<span class="string">'/users.html'</span>)</span><br><span class="line">fetched.then(<span class="function"><span class="keyword">function</span>(<span class="params">response</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> response.text()</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">body</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.body.innerHTML = body</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p><a href="https://dom.spec.whatwg.org/" target="_blank" rel="external">DOM operations</a> just get immensely better, lots of jQuery like APIs. Just to list a few:</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">node.<span class="function"><span class="title">prepend</span><span class="params">(childNode)</span></span></span><br><span class="line">node.<span class="function"><span class="title">append</span><span class="params">(childNode)</span></span></span><br><span class="line">node.<span class="function"><span class="title">replaceWith</span><span class="params">(newNode)</span></span></span><br><span class="line"><span class="comment">// find the first ".foo .bar" element in node</span></span><br><span class="line">node.<span class="function"><span class="title">query</span><span class="params">(<span class="string">'.foo .bar'</span>)</span></span></span><br><span class="line"><span class="comment">// find all a elements in li elements that are direct children of node</span></span><br><span class="line"><span class="comment">// and yes, the return value is a true array</span></span><br><span class="line">node.<span class="function"><span class="title">queryAll</span><span class="params">(<span class="string">'&gt;li a'</span>)</span></span></span><br></pre></td></tr></table></figure>
-<p><a href="http://www.ecma-international.org/ecma-262/6.0/index.html#sec-properties-of-the-promise-prototype-object" target="_blank" rel="external">ECMAScript 2015</a> for better JavaScript syntax and, and in this case what we are really interested in, better standard library:</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">Object.<span class="function"><span class="title">assign</span><span class="params">(&#123;a: <span class="number">1</span>&#125;, &#123;b: <span class="number">2</span>&#125;)</span></span> <span class="comment">// aka, extend</span></span><br><span class="line">Array.<span class="function"><span class="title">from</span><span class="params">(&#123;<span class="string">'0'</span>: <span class="number">0</span>, <span class="string">'1'</span>: <span class="number">1</span>, length: <span class="number">2</span>&#125;)</span></span> <span class="comment">// aka, [].slice.call(...)</span></span><br></pre></td></tr></table></figure>
-<p>And <a href="http://www.w3.org/TR/web-animations/" target="_blank" rel="external">Web animations</a> for writing sophisticated and butter smooth animations:</p>
-<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">// fade in node in one second</span></span><br><span class="line"><span class="tag">node</span><span class="class">.animate</span>([&#123;</span><br><span class="line">    <span class="tag">opacity</span>: <span class="tag">0</span></span><br><span class="line">&#125;, &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">1</span></span><br><span class="line">&#125;], <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
-<p> Basically every sub component of jQuery has a modern native counterpart now. And there exist polyfill libraries for all these APIs.</p>
-<p>You might ask, what’s the difference between depending on a polyfill library and a third party library? Why depending on polyfill libraries won’t fragment components?</p>
-<p>Good questions.</p>
-<p>First, components written using modern native APIs don’t depends on polyfill libraries. In a competent browser, there is no need to include any polyfill library at all. Instead, they depend on a competent browser, and polyfill libraries upgrade an incompetent browser to a competent one.</p>
-<p>And since they only depend on native APIs, which every browser is supposed to agree on, there is really no fragmentation.</p>
-<h2 id="Conclusion">Conclusion</h2><p>Web platform is getting more and more pleasant to program on, with the prolific web standards that have been pumped out in recent years. Bringing these pleasant experience to as many browsers as possible can be really beneficial for every developer.</p>
-<p>But in the next post, we will find out why it’s not an easy task, and discuss some of the challenges polyfill libraries might face.</p>
+<p>He seems like a dumb-ass. He installed more than 500 apps in his iPhone, so trying to find any app in his phone takes him a lot of time, remembering the name of app, remembering the icon of the app, or remembering any clue of the app takes him more than 5 seconds and during that 5 seconds he just stares at screen and does nothing, like a fool.</p>
+<p>Oh he uses 1password, randomly generated all his passwords, so he doesn’t remember any password as well, like a fool again.</p>
+<p>He has many alarm clocks and sets many alarms on his phone, but getting up earlier is still his biggest dream. The most efficient development time for him is at midnight, so if you get locked out of your house in the middle of the night, he would be one guy who probably could save you.</p>
+<p>He thinks he is a dumb-ass and learns things the hard way, so what he really wants to do is to tell young people how to avoid the mistakes he has made. But before he thinks he’s learned enough to teach people, you won’t get benefits from him.</p>
+<img src="/blog/2015/09/08/arthur-joins-strikingly/arthur.gif" alt="arthur.gif" title="">
+<p>Did I mention he has a twin brother? He has a younger brother (10 mins younger, actually) who looks exactly like him. So if you see someone who looks like him sitting in the Strikingly office, ask his name first.</p>
+<p>Visit <a href="http://arthurwxy.strikingly.com/" target="_blank" rel="external">this Strikingly site</a> to know more about him.</p>
 </span>
       
     </div>
@@ -274,9 +247,9 @@
       
         <div class="post-tags">
           
-            <a href="/blog/tags/javascript/" rel="tag">#javascript</a>
+            <a href="/blog/tags/English/" rel="tag">#English</a>
           
-            <a href="/blog/tags/polyfill/" rel="tag">#polyfill</a>
+            <a href="/blog/tags/Team/" rel="tag">#Team</a>
           
         </div>
       
@@ -285,11 +258,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/blog/2015/09/14/Simple-rails-history-pattern-ActiveRecord/" rel="prev">Simple rails history pattern (ActiveRecord)</a>
+            
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/blog/2015/09/14/Simple-rails-history-pattern-ActiveRecord/" rel="next">Simple rails history pattern (ActiveRecord)</a>
+              <a href="/blog/2015/09/07/css3-shadows/" rel="next">CSS3 Shadows Are Crazy Awesome</a>
             
           </div>
         </div>
@@ -410,7 +385,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction_to_Polyfill"><span class="nav-number">1.</span> <span class="nav-text">Introduction to Polyfill</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Comparison_of_Polyfill_Libraries_and_Alternatives"><span class="nav-number">2.</span> <span class="nav-text">Comparison of Polyfill Libraries and Alternatives</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">3.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+              <p class="post-toc-empty">This post does not have a Table Of Contents</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -464,9 +439,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'strikinglytech';
-      var disqus_identifier = '2015/10/22/Thoughts-on-Polyfill-Libraries/';
-      var disqus_title = 'Thoughts on Polyfill Libraries';
-      var disqus_url = 'http://strikingly.github.io/blog/2015/10/22/Thoughts-on-Polyfill-Libraries/';
+      var disqus_identifier = '2015/09/08/arthur-joins-strikingly/';
+      var disqus_title = 'Arthur Wang Joins Strikingly';
+      var disqus_url = 'http://strikingly.github.io/blog/2015/09/08/arthur-joins-strikingly/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

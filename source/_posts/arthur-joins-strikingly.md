@@ -11,6 +11,8 @@ Arthur Wang is our “new” iOS developer. Alright, he is not new.  He has been
 
 The family name Wang in Chinese means KING, so we literally call him “King Arthur” in Chinese.
 
+<!-- more -->
+
 He seems like a dumb-ass. He installed more than 500 apps in his iPhone, so trying to find any app in his phone takes him a lot of time, remembering the name of app, remembering the icon of the app, or remembering any clue of the app takes him more than 5 seconds and during that 5 seconds he just stares at screen and does nothing, like a fool.
 
 Oh he uses 1password, randomly generated all his passwords, so he doesn't remember any password as well, like a fool again.
